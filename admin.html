@@ -677,7 +677,7 @@ textarea.form-control{min-height:90px}
           <div class="mb-2"><label class="lbl">Title <small style="color:var(--txt3)">(max 60)</small></label><input type="text" class="form-control" id="notifTitle" maxlength="60"><div class="text-end mt-1"><small id="nTitleCnt" style="color:var(--txt3);font-size:.65rem">0/60</small></div></div>
           <div class="mb-3"><label class="lbl">Message <small style="color:var(--txt3)">(max 200)</small></label><textarea class="form-control" id="notifBody" rows="3" maxlength="200"></textarea><div class="text-end mt-1"><small id="nBodyCnt" style="color:var(--txt3);font-size:.65rem">0/200</small></div></div>
           <div id="notifStatus" class="mb-2"></div>
-          <button type="button" class="btn-p btn-cyan2 w-100" style="justify-content:center" id="sendNotifBtn"><i class="bi bi-send-fill me-1"></i>SEND NOTIFICATION</button>
+          <button type="button" class="btn-p btn-cyan2 w-100" style="justify-content:center" id="sendNotifBtn"><i class="bi bi-send-fill me-1"></i>SEND IN-APP NOTIFICATION</button><div style="margin-top:10px"><button type="button" class="btn-p w-100" onclick="sendOSPushDirect()" style="justify-content:center;background:linear-gradient(135deg,#6c47ff,#a855f7);color:#fff;border:none"><i class="bi bi-bell-fill me-1"></i>SEND PUSH NOTIFICATION</button></div>
         </form>
       </div></div>
     </div>
@@ -2316,6 +2316,15 @@ async function delPromo(id){if(!confirm('Delete?'))return;showL(true);try{await 
 
 // ══ NOTIFICATIONS ══
 var NICONS={tournament_reminder:'🏆',win_announcement:'🎉',deposit_credited:'💰',withdrawal_update:'💸',promotion:'🎁',system:'⚙️',custom:'📢'};
+
+/* OneSignal Direct Push */
+function sendOSPushDirect(){
+  var title=$('notifTitle').value.trim();
+  var body=$('notifBody').value.trim();
+  if(!title||!body){showAlert('notifStatus','Pehle Title aur Message likho!','warning');return;}
+  alert('OneSignal mein yeh paste karo - Title: ' + title + ' | Message: ' + body);
+  window.open('https://app.onesignal.com/apps/344a953a-07e2-4773-8297-aaffe5a277ad/notifications/new','_blank');
+}
 
 /* ── OneSignal Config ── */
 var OS_APP_ID  = '344a953a-07e2-4773-8297-aaffe5a277ad';   // OneSignal App ID
