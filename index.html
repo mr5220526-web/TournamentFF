@@ -2778,16 +2778,39 @@
         }
 
         /* ── Google Login ── */
+        function isMedianApp() {
+            return typeof median !== 'undefined' || /median|gonative/i.test(navigator.userAgent);
+        }
+
         async function doGoogleLogin() {
             showL(true, 'Google se login ho raha hai...');
             try {
                 var provider = new GoogleAuthProvider();
-                var result = await signInWithPopup(auth, provider);
-                var u = result.user;
-                // Check if user exists in DB
+                provider.addScope('email');
+                provider.addScope('profile');
+
+                if (isMedianApp()) {
+                    /* Median/GoNative app: use signInWithRedirect */
+                    /* Save flag so we know redirect is coming */
+                    try { localStorage.setItem('jst_google_redirect', '1'); } catch(e){}
+                    auth.signInWithRedirect(provider);
+                } else {
+                    /* Normal browser: use popup */
+                    var result = await signInWithPopup(auth, provider);
+                    await _handleGoogleUser(result.user);
+                }
+            } catch (e) {
+                showL(false);
+                var liStat = $('liStat') || $('su1St');
+                if (liStat) showA(liStat.id, 'Google login failed: ' + (e.message || e.code || ''), 'danger');
+            }
+        }
+
+        async function _handleGoogleUser(u) {
+            if (!u) return;
+            try {
                 var snap = await get(ref(db, 'users/' + u.uid));
                 if (!snap.exists()) {
-                    // New Google user — create profile
                     var code = 'JST' + Math.random().toString(36).substring(2, 8).toUpperCase();
                     await set(ref(db, 'users/' + u.uid), {
                         uid: u.uid,
@@ -2804,11 +2827,24 @@
                         profileComplete: false
                     });
                 }
-            } catch (e) {
-                showL(false);
-                var liStat = $('liStat') || $('su1St');
-                if (liStat) showA(liStat.id, 'Google login failed: ' + (e.message || ''), 'danger');
+            } catch(e) {
+                console.error('Google user save error:', e);
             }
+        }
+
+        /* Handle redirect result (for Median app) */
+        function _checkGoogleRedirect() {
+            var flag = '';
+            try { flag = localStorage.getItem('jst_google_redirect'); } catch(e){}
+            if (!flag) return;
+            try { localStorage.removeItem('jst_google_redirect'); } catch(e){}
+            auth.getRedirectResult().then(function(result) {
+                if (result && result.user) {
+                    _handleGoogleUser(result.user);
+                }
+            }).catch(function(e) {
+                console.error('Redirect result error:', e);
+            });
         }
 
 
@@ -5384,8 +5420,7 @@
                 return;
             }
             initTheme();
-
-
+            _checkGoogleRedirect();
 
             /* Real-time feats listener so Google button updates when admin changes it */
             onValue(ref(db, 'appFeatures'), function(snap) {
