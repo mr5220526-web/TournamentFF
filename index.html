@@ -293,6 +293,14 @@
         }
 
         /* ═══ HEADER ═══ */
+        /* Language Selector */
+        .lang-select { background: var(--card-bg); border: 1px solid var(--brd); border-radius: 10px; padding: 8px 12px; color: var(--txt); font-family: 'Rajdhani',sans-serif; font-size: .85rem; width: 100%; cursor: pointer; }
+
+        /* Scroll glitch fix */
+        * { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+        .sec { will-change: auto !important; transform: none !important; }
+        main { overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+
         .hdr {
             position: fixed;
             top: 0;
@@ -301,6 +309,7 @@
             height: 60px;
             background: rgba(10, 9, 18, .97);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--brd);
             z-index: 100;
             display: flex;
@@ -2108,6 +2117,11 @@
                 <div id="liStat" class="mb-2"></div>
                 <button type="button" class="btn-p btn-cyan w-100 mb-3" style="justify-content:center" onclick="doLogin()"><i class="bi bi-shield-lock-fill me-1"></i>LOGIN</button>
                 <div class="text-center"><span style="font-size:.75rem;color:var(--c2);cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700" onclick="doForgot()"><i class="bi bi-key me-1"></i>Forgot Password?</span></div>
+                <div class="auth-divider">OR</div>
+                <button type="button" class="google-btn" onclick="doGoogleLogin()">
+                  <svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+                  Continue with Google
+                </button>
 
                 <div class="text-center mt-3" style="font-size:.72rem;color:var(--txt3)">Only <strong style="color:var(--c2)">@gmail.com</strong> accounts allowed</div>
                 <div class="text-center mt-3">
@@ -2149,12 +2163,18 @@
                     </div>
                     <div id="su1St" class="mb-2"></div>
                     <button type="button" class="btn-p btn-cyan w-100" style="justify-content:center" onclick="su1Next()"><i class="bi bi-arrow-right me-1"></i>Next — Profile Setup</button>
+                    <div class="auth-divider">OR</div>
+                    <button type="button" class="google-btn" onclick="doGoogleLogin()">
+                      <svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+                      Sign Up with Google
+                    </button>
                 </div>
                 <!-- Step 2 -->
                 <div id="step2" style="display:none">
                     <div style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:.75rem;color:var(--c2);font-family:'Rajdhani',sans-serif"><i class="bi bi-person-fill me-1"></i>Step 2: Profile — admin aur tournament mein yeh data use hoga</div>
                     <div class="mb-3"><label class="lbl"><i class="bi bi-person-fill me-1"></i>Display Name *</label><input type="text" class="form-control" id="suName" placeholder="Tumhara gaming name" maxlength="30"></div>
                     <div class="mb-3"><label class="lbl"><i class="bi bi-phone-fill me-1"></i>Phone Number *</label><input type="tel" class="form-control" id="suPhone" placeholder="03XXXXXXXXX"></div>
+                    <div class="mb-3"><label class="lbl"><i class="bi bi-controller me-1"></i>Game Name *</label><input type="text" class="form-control" id="suGameName" placeholder="Tumhara in-game name"></div>
                     <div class="mb-3"><label class="lbl"><i class="bi bi-controller me-1"></i>In-Game UID *</label><input type="text" class="form-control" id="suUid" placeholder="Tumhara in-game UID/ID"></div>
                     <div class="mb-3"><label class="lbl"><i class="bi bi-joystick me-1"></i>Favourite Game</label><select class="form-select" id="suGame">
                             <option value="">-- Select Game --</option>
@@ -2182,7 +2202,7 @@
         <!-- HEADER -->
         <header class="hdr">
             <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
-                <div class="hdr-logo" id="hdrLogo">J</div>
+                <div class="hdr-logo" id="hdrLogo" style="overflow:hidden;padding:0"><img id="hdrAvatarImg" src="" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:none"><span id="hdrLogoTxt">J</span></div>
                 <div style="min-width:0">
                     <div style="font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="hdrName">Player</div>
                     <div style="font-size:.58rem;color:var(--txt3);font-family:'Rajdhani',sans-serif" id="hdrUid"></div>
@@ -2550,6 +2570,12 @@
                     <div class="mb-3"><label class="lbl"><i class="bi bi-phone-fill me-1"></i>Phone</label><input type="tel" class="form-control" id="epPhone"></div>
                     <div class="mb-3"><label class="lbl"><i class="bi bi-controller me-1"></i>Game UID</label><input type="text" class="form-control" id="epUid"></div>
                     <div class="mb-3"><label class="lbl"><i class="bi bi-image me-1"></i>Avatar URL</label><input type="url" class="form-control" id="epAv" placeholder="https://..."></div>
+                    <div class="mb-3"><label class="lbl"><i class="bi bi-translate me-1"></i>Language / زبان</label>
+                        <select class="lang-select" id="langSelector" onchange="changeLang(this.value)">
+                            <option value="en">🇬🇧 English</option>
+                            <option value="ur">🇵🇰 اردو</option>
+                        </select>
+                    </div>
                     <div id="epStat"></div>
                 </div>
                 <div class="modal-footer"><button type="button" class="btn-p btn-ghost btn-sm" data-bs-dismiss="modal">Cancel</button><button type="button" class="btn-p btn-cyan" onclick="saveEdit()"><i class="bi bi-save-fill me-1"></i>Save Profile</button></div>
@@ -2714,6 +2740,76 @@
         var signInWithPopup = function(a, p) {
             return a.signInWithPopup(p);
         };
+
+        /* ── Language System ── */
+        var LANG = {
+            en: {
+                home: 'Home', battles: 'Battles', wallet: 'Wallet', profile: 'Profile',
+                notifications: 'NOTIFICATIONS', balance: 'BALANCE', winnings: 'WINNINGS',
+                liveBattles: 'LIVE BATTLES', streak: 'STREAK', noNotif: 'No notifications',
+                login: 'LOGIN', signup: 'Sign Up', logout: 'Logout'
+            },
+            ur: {
+                home: 'ہوم', battles: 'مقابلے', wallet: 'والٹ', profile: 'پروفائل',
+                notifications: 'اطلاعات', balance: 'بیلنس', winnings: 'جیت',
+                liveBattles: 'لائیو مقابلے', streak: 'سلسلہ', noNotif: 'کوئی اطلاع نہیں',
+                login: 'لاگ ان', signup: 'سائن اپ', logout: 'لاگ آوٹ'
+            }
+        };
+
+        function changeLang(lang) {
+            localStorage.setItem('jst_lang', lang);
+            applyLang(lang);
+        }
+
+        function applyLang(lang) {
+            var L = LANG[lang] || LANG.en;
+            var dir = lang === 'ur' ? 'rtl' : 'ltr';
+            document.documentElement.dir = dir;
+            // Bottom nav labels
+            var bnBtns = document.querySelectorAll('.bn-btn span');
+            var keys = ['home','battles','','wallet','profile'];
+            bnBtns.forEach(function(el, i) { if (keys[i] && L[keys[i]]) el.textContent = L[keys[i]]; });
+            // Notification section title
+            var notifTitle = document.querySelector('#sec-notif .sec-title span');
+            if (notifTitle) notifTitle.innerHTML = '<i class="bi bi-bell-fill me-2" style="color:var(--c2)"></i>' + L.notifications;
+            // Lang selector sync
+            if ($('langSelector')) $('langSelector').value = lang;
+        }
+
+        /* ── Google Login ── */
+        async function doGoogleLogin() {
+            showL(true, 'Google se login ho raha hai...');
+            try {
+                var provider = new GoogleAuthProvider();
+                var result = await signInWithPopup(auth, provider);
+                var u = result.user;
+                // Check if user exists in DB
+                var snap = await get(ref(db, 'users/' + u.uid));
+                if (!snap.exists()) {
+                    // New Google user — create profile
+                    var code = 'JST' + Math.random().toString(36).substring(2, 8).toUpperCase();
+                    await set(ref(db, 'users/' + u.uid), {
+                        uid: u.uid,
+                        displayName: u.displayName || 'Player',
+                        email: u.email,
+                        phone: '',
+                        gameUid: '',
+                        photoURL: u.photoURL || '',
+                        balance: 0,
+                        winningCash: 0,
+                        referralCode: code,
+                        createdAt: Date.now(),
+                        loginMethod: 'google',
+                        profileComplete: false
+                    });
+                }
+            } catch (e) {
+                showL(false);
+                var liStat = $('liStat') || $('su1St');
+                if (liStat) showA(liStat.id, 'Google login failed: ' + (e.message || ''), 'danger');
+            }
+        }
 
 
         /* Config */
@@ -3043,20 +3139,13 @@
             var name = ($('suName') ? $('suName').value : '').trim();
             var phone = ($('suPhone') ? $('suPhone').value : '').trim();
             var uid = ($('suUid') ? $('suUid').value : '').trim();
+            var gameName = ($('suGameName') ? $('suGameName').value : '').trim();
             var gId = $('suGame') ? $('suGame').value : '';
             clearA('su2St');
-            if (!name) {
-                showA('su2St', 'Name required', 'warning');
-                return;
-            }
-            if (!phone) {
-                showA('su2St', 'Phone required', 'warning');
-                return;
-            }
-            if (!uid) {
-                showA('su2St', 'Game UID required', 'warning');
-                return;
-            }
+            if (!name) { showA('su2St', 'Display Name required', 'warning'); return; }
+            if (!phone) { showA('su2St', 'Phone required', 'warning'); return; }
+            if (!gameName) { showA('su2St', 'Game Name required', 'warning'); return; }
+            if (!uid) { showA('su2St', 'Game UID required', 'warning'); return; }
             showL(true, 'CREATING ACCOUNT...');
             try {
                 var cred = await createUserWithEmailAndPassword(auth, _s1.em, _s1.pw);
@@ -3214,6 +3303,18 @@
         function updateHdr() {
             var u = uD;
             if ($('hdrName')) $('hdrName').textContent = H(u.displayName || 'Player');
+            // Header profile image
+            var hdrAv = $('hdrAvatarImg');
+            var hdrTxt = $('hdrLogoTxt');
+            if (hdrAv && u.photoURL) {
+                hdrAv.src = u.photoURL;
+                hdrAv.style.display = 'block';
+                if (hdrTxt) hdrTxt.style.display = 'none';
+            } else if (hdrTxt) {
+                hdrTxt.textContent = (u.displayName || 'P').charAt(0).toUpperCase();
+                hdrTxt.style.display = 'block';
+                if (hdrAv) hdrAv.style.display = 'none';
+            }
             if ($('hdrUid')) $('hdrUid').textContent = u.gameUid ? 'UID: ' + H(u.gameUid) : '';
             var bal = (u.balance || 0) + (u.winningCash || 0) + (u.bonusCash || 0);
             if ($('hdrBal')) $('hdrBal').textContent = JC(bal);
@@ -4819,6 +4920,7 @@
             if ($('epPhone')) $('epPhone').value = u.phone || '';
             if ($('epUid')) $('epUid').value = u.gameUid || '';
             if ($('epAv')) $('epAv').value = u.photoURL || '';
+            if ($('langSelector')) $('langSelector').value = localStorage.getItem('jst_lang') || 'en';
             clearA('epStat');
             getM('editModal').show();
         }
@@ -4934,9 +5036,10 @@
                 });
                 var bSnap = await get(ref(db, 'notifications/broadcast'));
                 var last = parseInt(localStorage.getItem('jst_lb') || '0');
+                var hiddenBN = JSON.parse(localStorage.getItem('jst_hbn') || '[]');
                 if (bSnap.exists()) bSnap.forEach(function(c) {
                     var n = c.val();
-                    if (n && (n.sentAt || 0) > last - 86400000 * 7) all.push(Object.assign({
+                    if (n && (n.sentAt || 0) > last - 86400000 * 7 && !hiddenBN.includes(c.key)) all.push(Object.assign({
                         id: c.key,
                         broadcast: true
                     }, n));
@@ -4981,16 +5084,25 @@
                     ninfo.appendChild(nd);
                     nrow.appendChild(nico);
                     nrow.appendChild(ninfo);
+                    var nActions = document.createElement('div');
+                    nActions.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0';
                     if (!n.isRead) {
                         var dot = document.createElement('div');
-                        dot.style.cssText = 'width:8px;height:8px;border-radius:50%;background:var(--c2);flex-shrink:0;margin-top:4px;box-shadow:0 0 6px var(--c2)';
-                        nrow.appendChild(dot);
+                        dot.style.cssText = 'width:8px;height:8px;border-radius:50%;background:var(--c2);box-shadow:0 0 6px var(--c2)';
+                        nActions.appendChild(dot);
                     }
-                    (function(nid, pers) {
-                        nrow.onclick = function() {
-                            markRead(nid, pers);
+                    var delBtn = document.createElement('button');
+                    delBtn.innerHTML = '<i class="bi bi-trash3-fill"></i>';
+                    delBtn.style.cssText = 'background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:6px;color:#ef4444;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.65rem;cursor:pointer;padding:0';
+                    (function(nid, pers, bcast, row) {
+                        delBtn.onclick = function(e) {
+                            e.stopPropagation();
+                            deleteNotif(nid, pers, bcast, row);
                         };
-                    })(n.id, !!n.personal);
+                        nrow.onclick = function() { markRead(nid, pers); };
+                    })(n.id, !!n.personal, !!n.broadcast, nrow);
+                    nActions.appendChild(delBtn);
+                    nrow.appendChild(nActions);
                     el.appendChild(nrow);
                 });
             } catch (e) {
@@ -5003,6 +5115,21 @@
             update(ref(db, 'notifications/users/' + cu.uid + '/' + id), {
                 isRead: true
             }).catch(function() {});
+        }
+
+        function deleteNotif(id, personal, broadcast, rowEl) {
+            if (!cu || !db) return;
+            if (rowEl) { rowEl.style.opacity = '0.4'; rowEl.style.pointerEvents = 'none'; }
+            if (personal) {
+                remove(ref(db, 'notifications/users/' + cu.uid + '/' + id))
+                    .then(function() { loadNotifs(); })
+                    .catch(function() { if (rowEl) { rowEl.style.opacity='1'; rowEl.style.pointerEvents=''; } });
+            } else if (broadcast) {
+                // Hide broadcast notification locally
+                var hidden = JSON.parse(localStorage.getItem('jst_hbn') || '[]');
+                if (!hidden.includes(id)) { hidden.push(id); localStorage.setItem('jst_hbn', JSON.stringify(hidden)); }
+                loadNotifs();
+            }
         }
 
         function markAllRead() {
@@ -5342,6 +5469,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Apply saved language on start
+            var savedLang = localStorage.getItem('jst_lang') || 'en';
+            applyLang(savedLang);
             setTimeout(_startApp, 200);
             // Notification permission popup — app open hone pe 4 second baad
             setTimeout(function() {
