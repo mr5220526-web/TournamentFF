@@ -3165,13 +3165,11 @@
         /* ── Google Redirect Check (runs on every app open) ── */
         /* ── Google Redirect Check ── */
         function _checkGoogleRedirect() {
-            auth.getRedirectResult().then(function(result) {
-                if (result && result.user) {
-                    _saveGoogleUser(result.user);
-                }
-            }).catch(function(e) {
-                console.error('Redirect check:', e);
-            });
+            /* Redirect result is already handled in the Firebase init block
+               via the setPersistence().then(getRedirectResult) chain.
+               Calling getRedirectResult() a second time here would clear
+               the pending result and cause the user not to be saved.
+               This stub is kept only for backward compatibility. */
         }
 
         /* ── Google Login ── */
@@ -3209,23 +3207,56 @@
                 var provider = new GoogleAuthProvider();
                 provider.addScope('email');
                 provider.addScope('profile');
+                /* Prompt account selection every time so user can switch accounts */
+                provider.setCustomParameters({ prompt: 'select_account' });
 
                 if (isMedianApp()) {
-                    /* Median app: Deep Link se wapas aao */
-                    /* Firebase redirect URL mein app scheme add karo */
-                    provider.setCustomParameters({
-                        redirect_uri: 'fftournament://mr5220526-web.github.io'
-                    });
+                    /* Median/GoNative app — use redirect flow */
                     await signInWithRedirect(auth, provider);
+                    /* Page redirect hoga — code yahan nahi pahunchega */
                 } else {
-                    /* Normal browser: popup */
-                    var result = await signInWithPopup(auth, provider);
-                    await _saveGoogleUser(result.user);
+                    /* Web browser — try popup first, fallback to redirect */
+                    try {
+                        /* Ensure LOCAL persistence BEFORE signing in */
+                        try {
+                            await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                        } catch (_pe) { /* ignore — already set */ }
+
+                        var result = await signInWithPopup(auth, provider);
+                        if (result && result.user) {
+                            await _saveGoogleUser(result.user);
+                            /* onAuthStateChanged will load the app automatically */
+                        }
+                    } catch (popupErr) {
+                        /* popup_blocked_by_browser ya cross-origin issue */
+                        if (
+                            popupErr.code === 'auth/popup-blocked' ||
+                            popupErr.code === 'auth/popup-closed-by-user' ||
+                            popupErr.code === 'auth/cancelled-popup-request'
+                        ) {
+                            /* Silently ignore user-cancelled popups */
+                            showL(false);
+                            return;
+                        }
+                        /* Other errors — fallback to redirect */
+                        console.warn('Popup failed, trying redirect:', popupErr.code);
+                        try {
+                            await signInWithRedirect(auth, provider);
+                        } catch (redirErr) {
+                            throw redirErr;
+                        }
+                    }
                 }
             } catch (e) {
                 showL(false);
+                var msg = '';
+                if (e.code === 'auth/network-request-failed') msg = 'Internet connection check karo.';
+                else if (e.code === 'auth/user-disabled') msg = 'Yeh account disabled hai.';
+                else if (e.code === 'auth/operation-not-allowed') msg = 'Google login enable nahi hai. Admin se rabta karo.';
+                else msg = 'Google login failed: ' + (e.message || e.code || 'Unknown error');
                 var liStat = $('liStat') || $('su1St');
-                if (liStat) showA(liStat.id, 'Google login failed: ' + (e.message || e.code || ''), 'danger');
+                if (liStat) showA(liStat.id, msg, 'danger');
+                else console.error('Google login error:', e);
             }
         }
 
@@ -3254,22 +3285,37 @@
         var IMGBB_KEY = '2312d8bb15d2e77c777fa7d39ab18370';
         var ADMIN_EMAIL = 'jstouradmin@gmail.com';
         var app, db, auth;
+        /* ── Firebase Init + Persistence Fix ──
+           setPersistence LOCAL pehle set karo, phir baaki sab.
+           Yeh ensure karta hai ke Google login refresh ke baad bhi
+           save rahe — IndexedDB use hoti hai LOCAL persistence ke liye. */
         try {
             app = _fa(firebaseConfig);
             db = _fdb(app);
             auth = _fauth(app);
-            /* Persistence — login save karo (firebase.auth.Auth.Persistence.LOCAL) */
-            try {
-                auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(){});
-            } catch(e) {}
-            /* Check redirect result on every app start — Google login ke baad app pe wapas aao */
-            auth.getRedirectResult().then(function(result) {
+
+            /* Step 1: Pehle LOCAL persistence set karo — SYNCHRONOUS se pehle */
+            var _PERSIST = firebase.auth.Auth.Persistence.LOCAL;
+            auth.setPersistence(_PERSIST).then(function() {
+                /* Step 2: Persistence set hone ke baad redirect result check karo */
+                return auth.getRedirectResult();
+            }).then(function(result) {
                 if (result && result.user) {
+                    /* Google redirect se wapas aaye — user save karo */
                     _saveGoogleUser(result.user);
                 }
-            }).catch(function(e) { console.error('getRedirectResult:', e); });
+            }).catch(function(e) {
+                /* Persistence fail hone par bhi app chale — silently continue */
+                console.warn('Firebase persistence/redirect:', e.code || e.message);
+                /* Fir bhi redirect result try karo */
+                try {
+                    auth.getRedirectResult().then(function(result) {
+                        if (result && result.user) _saveGoogleUser(result.user);
+                    }).catch(function(){});
+                } catch(_e) {}
+            });
         } catch (e) {
-            console.error('Firebase:', e);
+            console.error('Firebase init:', e);
         }
 
         /* State */
@@ -6034,6 +6080,9 @@
         }
 
         /* APP START */
+        /* Flag: agar redirect ho raha hai to onAuthStateChanged ko wait karwao */
+        var _googleRedirectPending = false;
+
         function _startApp() {
             if (!app || !auth || !db) {
                 setTimeout(_startApp, 300);
@@ -6048,6 +6097,9 @@
                 if (snap.exists()) feats = snap.val();
             });
 
+            /* ── onAuthStateChanged — yeh Firebase ka main session listener hai ──
+               Firebase LOCAL persistence ke saath yeh automatically saved session
+               detect karta hai even after app restart/refresh. */
             onAuthStateChanged(auth, function(user) {
                 if (user) {
                     cu = user;
@@ -6088,37 +6140,43 @@
                         showScreen('loginScreen');
                     });
                 } else {
+                    /* user = null — ya to logged out hai ya Google redirect pending hai.
+                       Agar redirect pending hai to thoda wait karo — Firebase session 
+                       restore hoti hai automatically LOCAL persistence ke saath. */
                     cu = null;
                     uD = {};
-                    $('mainWrap').style.display = 'none';
-                    $('maintScreen').classList.remove('show');
-                    $('authWrap').style.display = 'flex';
-                    showL(false);
-                    Promise.all([
-                        get(ref(db, 'settings')).catch(function() {
-                            return {
-                                exists: function() {
-                                    return false;
-                                }
-                            };
-                        }),
-                        get(ref(db, 'appFeatures')).catch(function() {
-                            return {
-                                exists: function() {
-                                    return false;
-                                }
-                            };
-                        })
-                    ]).then(function(res) {
-                        cfg = res[0].exists() ? res[0].val() : {};
-                        feats = res[1].exists() ? res[1].val() : {};
-                        applyAuthBrand();
-                    }).catch(function() {
-                        applyAuthBrand();
-                    }).finally(function() {
+
+                    /* Small delay: Google redirect ke baad Firebase session
+                       restore hone mein 1-2 seconds lag sakte hain.
+                       Agar user abhi bhi null hai tab login screen dikhao. */
+                    var _nullCheckDelay = 800;
+                    setTimeout(function() {
+                        /* Check: kya redirect result processing ho rahi hai? */
+                        if (cu) return; /* User wapas aa gaya — kuch mat karo */
+
+                        $('mainWrap').style.display = 'none';
+                        $('maintScreen').classList.remove('show');
+                        $('authWrap').style.display = 'flex';
                         showL(false);
-                        showScreen('loginScreen');
-                    });
+
+                        Promise.all([
+                            get(ref(db, 'settings')).catch(function() {
+                                return { exists: function() { return false; } };
+                            }),
+                            get(ref(db, 'appFeatures')).catch(function() {
+                                return { exists: function() { return false; } };
+                            })
+                        ]).then(function(res) {
+                            cfg = res[0].exists() ? res[0].val() : {};
+                            feats = res[1].exists() ? res[1].val() : {};
+                            applyAuthBrand();
+                        }).catch(function() {
+                            applyAuthBrand();
+                        }).finally(function() {
+                            showL(false);
+                            showScreen('loginScreen');
+                        });
+                    }, _nullCheckDelay);
                 }
             });
         }
