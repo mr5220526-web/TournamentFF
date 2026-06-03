@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 
 <head>
@@ -300,6 +300,17 @@
         * { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
         .sec { will-change: auto !important; transform: none !important; }
         main { overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+
+        /* ═══ LOW-END DEVICE PERFORMANCE ═══ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+        .lite-mode .hdr, .lite-mode .bnav { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+        .lite-mode body::before, .lite-mode .panel::before, .lite-mode .hdr::after, .lite-mode .bnav::before { display: none !important; }
+        .lite-mode .bn-spin-pulse { display: none !important; }
+        .lite-mode .sec { animation: none !important; }
+        .lite-mode .sk { animation: none !important; background: var(--bg3) !important; }
+        .mc { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
 
         .hdr {
             position: fixed;
@@ -3162,15 +3173,50 @@
                 : "'Rajdhani', sans-serif";
         }
 
-        /* ── Google Redirect Check (runs on every app open) ── */
         /* ── Google Redirect Check ── */
+        /* Yeh function getRedirectResult se Google login result check karta hai.
+           Low-end / Android browsers mein popup ki jagah redirect use hota hai. */
         function _checkGoogleRedirect() {
-            /* Ab sirf popup use hota hai — redirect result check ki zaroorat nahi */
+            if (!auth) return;
+            showL(true, 'Google login check ho raha hai...');
+            auth.getRedirectResult().then(function(result) {
+                showL(false);
+                if (result && result.user) {
+                    _saveGoogleUser(result.user);
+                    /* onAuthStateChanged khud baqi handle karega */
+                }
+                /* Agar result null hai matlab koi redirect nahi tha — normal flow */
+            }).catch(function(e) {
+                showL(false);
+                /* Redirect errors silently ignore karo — normal app open par bhi yeh call hoti hai */
+                if (e.code && e.code !== 'auth/no-auth-event') {
+                    console.warn('Redirect result error:', e.code);
+                }
+            });
         }
 
         /* ── Google Login ── */
         function isMedianApp() {
             return typeof median !== 'undefined' || /gonative/i.test(navigator.userAgent);
+        }
+
+        /* Check karo browser popup support karta hai ya nahi */
+        function _supportsPopup() {
+            try {
+                /* sessionStorage accessible hai? */
+                sessionStorage.setItem('_pp_test', '1');
+                sessionStorage.removeItem('_pp_test');
+                /* Chrome Custom Tab / Android WebView mein popup usually fail hoti hai */
+                var ua = navigator.userAgent || '';
+                var isAndroidWebView = /wv/.test(ua) && /Android/.test(ua);
+                var isFBBrowser = /FBAN|FBAV/.test(ua);
+                var isInstagram = /Instagram/.test(ua);
+                if (isAndroidWebView || isFBBrowser || isInstagram) return false;
+                return true;
+            } catch(e) {
+                /* sessionStorage inaccessible = popup fail hogi */
+                return false;
+            }
         }
 
         async function _saveGoogleUser(u) {
@@ -3203,15 +3249,19 @@
                 var provider = new GoogleAuthProvider();
                 provider.addScope('email');
                 provider.addScope('profile');
+                provider.setCustomParameters({ prompt: 'select_account' });
 
-                /* signInWithPopup use karo — session automatically LOCAL mein save hota hai
-                   Firebase compat SDK mein. Redirect flow avoid karo kyunki wo session
-                   clear kar deta hai kuch browsers mein. */
-                var result = await auth.signInWithPopup(provider);
-
-                if (result && result.user) {
-                    await _saveGoogleUser(result.user);
-                    /* onAuthStateChanged khud app load karega */
+                if (_supportsPopup()) {
+                    /* Desktop ya capable browser — popup use karo */
+                    var result = await auth.signInWithPopup(provider);
+                    if (result && result.user) {
+                        await _saveGoogleUser(result.user);
+                        /* onAuthStateChanged khud app load karega */
+                    }
+                } else {
+                    /* Android low-end / WebView / partitioned storage — redirect use karo */
+                    await auth.signInWithRedirect(provider);
+                    /* Page reload hogi, _checkGoogleRedirect result pakdega */
                 }
             } catch (e) {
                 showL(false);
@@ -3219,13 +3269,27 @@
                     e.code === 'auth/popup-closed-by-user' ||
                     e.code === 'auth/cancelled-popup-request'
                 ) {
-                    /* User ne popup band kiya — koi error mat dikhao */
-                    return;
+                    return; /* User ne popup band kiya — silent */
+                }
+                /* Popup fail hui to redirect try karo */
+                if (
+                    e.code === 'auth/popup-blocked' ||
+                    e.code === 'auth/operation-not-supported-in-this-environment' ||
+                    (e.message && e.message.toLowerCase().includes('sessionstorage'))
+                ) {
+                    try {
+                        showL(true, 'Redirect se login ho raha hai...');
+                        var provider2 = new GoogleAuthProvider();
+                        provider2.addScope('email');
+                        provider2.addScope('profile');
+                        await auth.signInWithRedirect(provider2);
+                        return;
+                    } catch(e2) {
+                        showL(false);
+                    }
                 }
                 var msg = '';
-                if (e.code === 'auth/popup-blocked')
-                    msg = 'Popup block ho gaya. Browser mein popup allow karo.';
-                else if (e.code === 'auth/network-request-failed')
+                if (e.code === 'auth/network-request-failed')
                     msg = 'Internet connection check karo.';
                 else if (e.code === 'auth/user-disabled')
                     msg = 'Yeh account disabled hai.';
@@ -6051,6 +6115,19 @@
             initTheme();
             _checkGoogleRedirect();
             _loadSoundSettings();
+            /* Low-end device detection — slow devices ko lite-mode mein daal do */
+            (function() {
+                try {
+                    var t0 = performance.now();
+                    var sum = 0;
+                    for (var i = 0; i < 500000; i++) sum += i;
+                    var elapsed = performance.now() - t0;
+                    /* Agar 50ms se zyada lage to device slow hai */
+                    if (elapsed > 50 || navigator.hardwareConcurrency <= 2 || (navigator.deviceMemory && navigator.deviceMemory <= 2)) {
+                        document.documentElement.classList.add('lite-mode');
+                    }
+                } catch(e) {}
+            })();
 
             /* Real-time feats listener so Google button updates when admin changes it */
             onValue(ref(db, 'appFeatures'), function(snap) {
