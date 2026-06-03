@@ -152,7 +152,7 @@
             display: flex;
             align-items: center;
             padding: 0 14px;
-            gap: 10px;
+            gap: 7px;
             position: sticky;
             top: 0;
             z-index: 2
@@ -736,113 +736,300 @@
         }
 
         /* ═══ AUTH ═══ */
+        /* ══════════════════════════════════
+           AUTH — FF Tournaments Design
+           Screen-fit version
+        ══════════════════════════════════ */
         .auth-wrap {
-            min-height: 100dvh;
+            min-height: 100vh;
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            background: var(--bg);
-            background-image: radial-gradient(ellipse at 20% 20%, rgba(124, 58, 237, .15) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, .1) 0%, transparent 55%)
+            padding: 40px 14px 24px;
+            background: #0d0b1e;
+            background-image:
+                radial-gradient(ellipse at 20% 10%, rgba(90,30,200,.5) 0%, transparent 45%),
+                radial-gradient(ellipse at 80% 90%, rgba(0,140,180,.28) 0%, transparent 45%),
+                radial-gradient(ellipse at 50% 50%, rgba(50,10,100,.3) 0%, transparent 70%);
+            position: relative;
+            overflow-x: hidden
+        }
+        .auth-wrap::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(6,182,212,.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6,182,212,.04) 1px, transparent 1px);
+            background-size: 36px 36px;
+            pointer-events: none;
+            z-index: 0
+        }
+        .auth-wrap::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; right: -80px;
+            width: 240px; height: 240px;
+            border: 1.5px solid rgba(6,182,212,.1);
+            border-radius: 40px;
+            transform: rotate(30deg);
+            pointer-events: none;
+            z-index: 0
         }
 
         .auth-box {
-            width: 100%;
+            width: calc(100% - 28px);
             max-width: 400px;
-            background: var(--bg2);
-            border: 1px solid var(--brd2);
-            border-radius: 20px;
-            padding: 28px 22px;
+            background: rgba(14,9,32,0.82);
+            border: 1px solid rgba(110,55,230,.3);
+            border-radius: 22px;
+            padding: 0 16px 14px;
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 60px var(--shadow)
+            z-index: 1;
+            overflow: visible;
+            box-shadow: 0 0 60px rgba(100,35,200,.2), 0 20px 50px rgba(0,0,0,.6);
+            backdrop-filter: blur(18px);
+            animation: authIn .4s cubic-bezier(.22,1,.36,1) both;
+            margin: auto
         }
-
+        @keyframes authIn {
+            from { opacity:0; transform:translateY(20px) scale(.97); }
+            to   { opacity:1; transform:translateY(0) scale(1); }
+        }
         .auth-box::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--c1), var(--c2), var(--c1))
+            top: 0; left: 15%; right: 15%;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, rgba(150,80,255,.9), rgba(6,182,212,.9), rgba(150,80,255,.9), transparent);
+            border-radius: 2px
         }
 
-        .auth-coin {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #FFD700, #FF8C00);
+        /* ── COIN ── */
+        .auth-coin-wrap {
+            position: relative;
+            width: 80px; height: 80px;
+            margin: -18px auto 4px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: center
+        }
+        .auth-coin-wrap::before {
+            content: '';
+            position: absolute; inset: 0;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: #FFD700;
+            border-left-color: rgba(255,210,0,.3);
+            animation: orbitA 2.2s linear infinite
+        }
+        .auth-coin-wrap::after {
+            content: '';
+            position: absolute; inset: 10px;
+            border-radius: 50%;
+            border: 1.5px solid transparent;
+            border-bottom-color: #FF9500;
+            border-right-color: rgba(255,150,0,.25);
+            animation: orbitA 1.5s linear infinite reverse
+        }
+        @keyframes orbitA { to { transform:rotate(360deg); } }
+
+        .auth-coin {
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #FFE033 0%, #FFAA00 55%, #FF7700 100%);
+            display: flex; align-items: center; justify-content: center;
             font-family: 'Orbitron', sans-serif;
+            font-weight: 900; font-size: 1.2rem;
+            color: #1a0800;
+            box-shadow: 0 0 28px rgba(255,185,0,.75), 0 0 60px rgba(255,140,0,.25), inset 0 2px 4px rgba(255,255,180,.4);
+            animation: coinPulse 2.5s ease infinite;
+            position: relative; z-index: 2
+        }
+        @keyframes coinPulse {
+            0%,100% { box-shadow: 0 0 28px rgba(255,185,0,.75), 0 0 60px rgba(255,140,0,.25); }
+            50%      { box-shadow: 0 0 42px rgba(255,210,0,.9), 0 0 90px rgba(255,160,0,.38); }
+        }
+
+        /* ── TITLE ── */
+        .auth-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: .92rem;
             font-weight: 900;
-            font-size: 1.4rem;
-            color: #1a0a00;
-            box-shadow: 0 0 28px rgba(245, 158, 11, .5);
-            margin: 0 auto 14px;
-            animation: coinGlow 3s ease infinite
+            text-align: center;
+            letter-spacing: .14em;
+            margin-bottom: 1px;
+            background: linear-gradient(90deg, #b08800, #FFD700, #fff8c0, #FFD700, #b08800);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s linear infinite
+        }
+        @keyframes shimmer { to { background-position:300% center; } }
+
+        .auth-sub {
+            font-size: .6rem;
+            color: rgba(200,200,255,.45);
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: .26em;
+            margin-bottom: 10px;
+            text-transform: uppercase
+        }
+
+        /* ── TABS ── */
+        .auth-tabs {
+            display: flex;
+            background: rgba(255,255,255,.04);
+            border-radius: 50px;
+            padding: 3px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,.07);
+            gap: 3px
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 7px 10px;
+            border-radius: 50px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700; font-size: .85rem;
+            text-align: center; cursor: pointer;
+            border: none; background: transparent;
+            color: rgba(255,255,255,.38);
+            transition: all .3s cubic-bezier(.22,1,.36,1);
+            letter-spacing: .04em
+        }
+        .auth-tab.on {
+            background: linear-gradient(135deg, rgba(130,45,255,.75), rgba(175,75,255,.5));
+            color: #fff; font-weight: 800;
+            box-shadow: 0 0 18px rgba(130,45,255,.4), inset 0 1px 0 rgba(255,255,255,.15);
+            border: 1px solid rgba(160,75,255,.5)
+        }
+
+        /* ── LABELS ── */
+        #authWrap .lbl {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700; font-size: .72rem;
+            letter-spacing: .12em;
+            color: rgba(255,255,255,.7);
+            margin-bottom: 4px;
+            display: flex; align-items: center; gap: 5px;
+            text-transform: uppercase
+        }
+
+        /* ── INPUTS ── */
+        #authWrap .form-control,
+        #authWrap .form-select {
+            background: rgba(255,255,255,.05) !important;
+            border: 1.5px solid rgba(6,182,212,.2) !important;
+            border-radius: 10px !important;
+            color: #fff !important;
+            font-family: 'Rajdhani', sans-serif !important;
+            font-weight: 600 !important;
+            font-size: .88rem !important;
+            padding: 8px 12px !important;
+            transition: border-color .2s, box-shadow .2s, background .2s !important;
+            caret-color: #06B6D4
+        }
+        #authWrap .form-control:focus,
+        #authWrap .form-select:focus {
+            border-color: #06B6D4 !important;
+            box-shadow: 0 0 0 2px rgba(6,182,212,.15), 0 0 16px rgba(6,182,212,.1) !important;
+            background: rgba(6,182,212,.05) !important;
+            outline: none !important
+        }
+        #authWrap .form-control::placeholder { color: rgba(255,255,255,.2) !important }
+        #authWrap .form-select option { background: #130c28; color: #fff }
+        #authWrap .mb-3 { margin-bottom: 8px !important }
+        #authWrap .mb-2 { margin-bottom: 6px !important }
+        #authWrap .mb-4 { margin-bottom: 10px !important }
+        #authWrap .mt-3 { margin-top: 8px !important }
+
+        /* ── MAIN BUTTON ── */
+        #authWrap .btn-cyan {
+            background: linear-gradient(135deg, #0882b0, #06B6D4, #1ee5ff) !important;
+            border: none !important;
+            border-radius: 50px !important;
+            padding: 9px 20px !important;
+            font-size: .88rem !important;
+            font-weight: 800 !important;
+            letter-spacing: .1em !important;
+            color: #fff !important;
+            box-shadow: 0 0 22px rgba(6,182,212,.4), 0 4px 14px rgba(6,182,212,.28) !important;
+            transition: all .22s !important
+        }
+        #authWrap .btn-cyan:active { transform: scale(.97) !important }
+
+        /* ── DIVIDER ── */
+        .auth-divider {
+            text-align: center;
+            font-size: .65rem;
+            color: rgba(255,255,255,.3);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700; letter-spacing: .2em;
+            margin: 8px 0;
+            position: relative
+        }
+        .auth-divider::before, .auth-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%; width: 35%; height: 1px
+        }
+        .auth-divider::before { left:0; background: linear-gradient(90deg, transparent, rgba(6,182,212,.25)); }
+        .auth-divider::after  { right:0; background: linear-gradient(270deg, transparent, rgba(6,182,212,.25)); }
+
+        /* ── GOOGLE BTN — horizontal on small screens ── */
+        .google-btn {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 50px;
+            border: 1.5px solid rgba(6,182,212,.28);
+            background: rgba(6,182,212,.04);
+            color: rgba(255,255,255,.88);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700; font-size: .92rem;
+            letter-spacing: .05em;
+            cursor: pointer;
+            transition: all .22s
+        }
+        .google-btn:active {
+            border-color: rgba(6,182,212,.55);
+            background: rgba(6,182,212,.09);
+            transform: scale(.98)
+        }
+        .g-circle {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: rgba(8,4,22,.85);
+            border: 1.5px solid rgba(6,182,212,.45);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; flex-shrink: 0;
+            box-shadow: 0 0 16px rgba(6,182,212,.2);
+            animation: gPulse 2.8s ease infinite
+        }
+        .g-circle::before {
+            content: '';
+            position: absolute; inset: -5px;
+            border-radius: 50%;
+            border: 1px dashed rgba(6,182,212,.3);
+            animation: orbitA 9s linear infinite
+        }
+        .g-circle svg { width: 22px; height: 22px; }
+        @keyframes gPulse {
+            0%,100% { box-shadow: 0 0 16px rgba(6,182,212,.2); }
+            50%      { box-shadow: 0 0 28px rgba(6,182,212,.4); }
         }
 
         @keyframes coinGlow {
-
-            0%,
-            100% {
-                box-shadow: 0 0 28px rgba(245, 158, 11, .5)
-            }
-
-            50% {
-                box-shadow: 0 0 40px rgba(245, 158, 11, .7)
-            }
-        }
-
-        .auth-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.05rem;
-            font-weight: 900;
-            text-align: center;
-            letter-spacing: .06em;
-            margin-bottom: 2px
-        }
-
-        .auth-sub {
-            font-size: .72rem;
-            color: var(--txt2);
-            text-align: center;
-            font-family: 'Rajdhani', sans-serif;
-            letter-spacing: .06em;
-            margin-bottom: 22px
-        }
-
-        .auth-tabs {
-            display: flex;
-            background: var(--bg3);
-            border-radius: 11px;
-            padding: 3px;
-            margin-bottom: 20px;
-            border: 1px solid var(--brd)
-        }
-
-        .auth-tab {
-            flex: 1;
-            padding: 7px;
-            border-radius: 9px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            font-size: .82rem;
-            text-align: center;
-            cursor: pointer;
-            border: none;
-            background: transparent;
-            color: var(--txt2);
-            transition: all .2s
-        }
-
-        .auth-tab.on {
-            background: rgba(124, 58, 237, .2);
-            color: #A78BFA;
-            box-shadow: inset 0 0 0 1px rgba(124, 58, 237, .3)
+            0%,100% { box-shadow: 0 0 28px rgba(245,158,11,.5); }
+            50%      { box-shadow: 0 0 40px rgba(245,158,11,.7); }
         }
 
         /* ═══ PILLS ═══ */
@@ -914,7 +1101,7 @@
             padding: 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 7px;
             cursor: pointer;
             position: relative;
             overflow: hidden;
@@ -1188,7 +1375,7 @@
         /* ═══ SLIDER ═══ */
         .slide-row {
             display: flex;
-            gap: 10px;
+            gap: 7px;
             overflow-x: auto;
             scrollbar-width: none;
             padding-bottom: 4px;
@@ -1270,71 +1457,161 @@
         }
 
         /* ═══ SPIN WHEEL ═══ */
+        /* ══════════════════════════
+           SPIN WHEEL — Gamer Design
+        ══════════════════════════ */
         .spin-wrap {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px
+            gap: 10px;
+            padding: 8px 0
         }
 
+        /* Pointer */
         .spin-ptr {
-            width: 0;
-            height: 0;
-            border-left: 13px solid transparent;
-            border-right: 13px solid transparent;
-            border-top: 26px solid #FFD700;
-            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .5))
+            position: relative;
+            z-index: 5;
+            filter: drop-shadow(0 4px 8px rgba(255,215,0,.6));
+            animation: ptrBob .8s ease infinite alternate
+        }
+        .spin-ptr::before {
+            content: '';
+            display: block;
+            width: 0; height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 28px solid #FFD700
+        }
+        .spin-ptr::after {
+            content: '';
+            display: block;
+            width: 10px; height: 10px;
+            background: #FFD700;
+            border-radius: 50%;
+            margin: -4px auto 0;
+            box-shadow: 0 0 10px rgba(255,215,0,.8)
+        }
+        @keyframes ptrBob {
+            from { transform: translateY(0); }
+            to   { transform: translateY(4px); }
         }
 
+        /* Outer glow ring */
         .spin-c {
             position: relative;
             display: inline-block
         }
+        .spin-c::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            border: 2px solid rgba(124,58,237,.4);
+            animation: ringRotate 8s linear infinite
+        }
+        .spin-c::after {
+            content: '';
+            position: absolute;
+            inset: -16px;
+            border-radius: 50%;
+            border: 1px dashed rgba(6,182,212,.25);
+            animation: ringRotate 14s linear infinite reverse
+        }
+        @keyframes ringRotate { to { transform: rotate(360deg); } }
 
         .spin-canvas {
             border-radius: 50%;
-            box-shadow: 0 0 40px rgba(124, 58, 237, .5), 0 0 80px rgba(6, 182, 212, .2)
+            box-shadow:
+                0 0 0 4px rgba(255,255,255,.08),
+                0 0 30px rgba(124,58,237,.6),
+                0 0 70px rgba(6,182,212,.25),
+                0 0 120px rgba(124,58,237,.15);
+            display: block
         }
 
+        /* Center button */
         .spin-ctr {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 56px;
-            height: 56px;
+            width: 62px; height: 62px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #fff, #f1f5f9);
-            border: 4px solid var(--bg);
-            color: var(--bg);
+            background: linear-gradient(145deg, #1e1040, #0d0822);
+            border: 3px solid #FFD700;
+            color: #FFD700;
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
-            font-size: .62rem;
+            font-size: .58rem;
+            letter-spacing: .05em;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             line-height: 1.2;
-            z-index: 2;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, .5);
-            transition: all .2s
+            z-index: 3;
+            box-shadow: 0 0 20px rgba(255,215,0,.5), 0 0 40px rgba(255,215,0,.2), inset 0 0 20px rgba(255,215,0,.08);
+            transition: all .2s;
+            animation: ctrPulse 2s ease infinite
         }
-
+        @keyframes ctrPulse {
+            0%,100% { box-shadow: 0 0 20px rgba(255,215,0,.5), 0 0 40px rgba(255,215,0,.2); }
+            50%      { box-shadow: 0 0 30px rgba(255,215,0,.8), 0 0 60px rgba(255,215,0,.35); }
+        }
         .spin-ctr:hover:not(:disabled) {
-            transform: translate(-50%, -50%) scale(1.05)
+            transform: translate(-50%, -50%) scale(1.1);
+            border-color: #fff;
+            color: #fff
+        }
+        .spin-ctr:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            animation: none;
+            border-color: rgba(255,255,255,.2);
+            color: rgba(255,255,255,.3)
         }
 
-        .spin-ctr:disabled {
-            opacity: .6;
-            cursor: not-allowed
+        /* Spin particles */
+        .spin-particles {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 4
+        }
+
+        /* ═══ SETTINGS TOGGLE ═══ */
+        .sett-track {
+            width: 44px; height: 24px;
+            border-radius: 12px;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.1);
+            position: relative;
+            transition: all .25s
+        }
+        .sett-track.on {
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            border-color: var(--c2)
+        }
+        .sett-thumb {
+            position: absolute;
+            top: 2px; left: 2px;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,.3);
+            transition: transform .25s
+        }
+        .sett-track.on .sett-thumb {
+            transform: translateX(20px)
         }
 
         /* ═══ LEADERBOARD ═══ */
         .lb-row {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 7px;
             padding: 10px 14px;
             border-bottom: 1px solid var(--brd);
             transition: background .2s
@@ -1371,7 +1648,7 @@
             padding: 12px 14px;
             border-bottom: 1px solid var(--brd);
             display: flex;
-            gap: 10px;
+            gap: 7px;
             align-items: flex-start;
             cursor: pointer;
             transition: background .2s
@@ -1472,7 +1749,7 @@
         .tx-row {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 7px;
             padding: 10px 14px;
             border-bottom: 1px solid var(--brd);
             transition: background .2s
@@ -1506,7 +1783,7 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 7px;
             transition: all .2s;
             background: var(--bg3)
         }
@@ -2103,15 +2380,19 @@
         <!-- LOGIN -->
         <div id="loginScreen" class="auth-wrap">
             <div class="auth-box">
-                <div class="auth-coin" id="aLogoL">J</div>
-                <div class="auth-title" id="aNameL">JS TOURNAMENT</div>
+                <div class="auth-coin-wrap"><div class="auth-coin" id="aLogoL">F</div></div>
+                <div class="auth-title" id="aNameL">FF TOURNAMENTS</div>
                 <div class="auth-sub">FOR GAMERS</div>
                 <div class="auth-tabs mb-4">
                     <button class="auth-tab on">Login</button>
                     <button class="auth-tab" onclick="showScreen('signupScreen')">Sign Up</button>
                 </div>
-                <div class="mb-3"><label class="lbl"><i class="bi bi-envelope-fill me-1"></i>Gmail Address</label><input type="email" class="form-control" id="liEmail" placeholder="yourname@gmail.com" autocomplete="email"></div>
-                <div class="mb-3"><label class="lbl"><i class="bi bi-lock-fill me-1"></i>Password</label>
+                <div class="mb-3">
+                    <label class="lbl"><i class="bi bi-envelope-fill me-1"></i>Gmail Address</label>
+                    <input type="email" class="form-control" id="liEmail" placeholder="yourname@gmail.com" autocomplete="email">
+                </div>
+                <div class="mb-3">
+                    <label class="lbl"><i class="bi bi-lock-fill me-1"></i>Password</label>
                     <div class="inp-wrap"><input type="password" class="form-control" id="liPass" placeholder="Your password"><i class="bi bi-eye inp-eye" onclick="togglePw('liPass',this)"></i></div>
                 </div>
                 <div id="liStat" class="mb-2"></div>
@@ -2119,10 +2400,9 @@
                 <div class="text-center"><span style="font-size:.75rem;color:var(--c2);cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700" onclick="doForgot()"><i class="bi bi-key me-1"></i>Forgot Password?</span></div>
                 <div class="auth-divider">OR</div>
                 <button type="button" class="google-btn" onclick="doGoogleLogin()">
-                  <svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+                  <div class="g-circle"><svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg></div>
                   Continue with Google
                 </button>
-
                 <div class="text-center mt-3" style="font-size:.72rem;color:var(--txt3)">Only <strong style="color:var(--c2)">@gmail.com</strong> accounts allowed</div>
                 <div class="text-center mt-3">
                     <span class="dev-badge">
@@ -2130,7 +2410,7 @@
                         <span style="color:var(--txt3);font-size:.65rem">Developed by</span>
                         <span class="dev-name" style="font-size:.65rem">J.S</span>
                         <span style="color:var(--txt3);font-size:.65rem">• for Gamers</span>
-                        <span class="dev-ver" style="font-size:.6rem">v2.0</span>
+                        <span class="dev-ver" style="font-size:.6rem">v3.0</span>
                     </span>
                 </div>
             </div>
@@ -2138,34 +2418,37 @@
         <!-- SIGNUP -->
         <div id="signupScreen" style="display:none" class="auth-wrap">
             <div class="auth-box">
-                <div class="auth-coin" id="aLogoS">J</div>
-                <div class="auth-title" id="aNameS">JS TOURNAMENT</div>
+                <div class="auth-coin-wrap"><div class="auth-coin" id="aLogoS">F</div></div>
+                <div class="auth-title" id="aNameS">FF TOURNAMENTS</div>
                 <div class="auth-sub">FOR GAMERS</div>
                 <div class="auth-tabs mb-4">
                     <button class="auth-tab" onclick="showScreen('loginScreen')">Login</button>
                     <button class="auth-tab on">Sign Up</button>
                 </div>
-
                 <!-- Step 1 -->
                 <div id="step1">
-                    <div class="mb-3"><label class="lbl"><i class="bi bi-envelope-fill me-1"></i>Gmail Address *</label>
+                    <div class="mb-3">
+                        <label class="lbl"><i class="bi bi-envelope-fill me-1"></i>Gmail Address *</label>
                         <input type="email" class="form-control" id="suEmail" placeholder="yourname@gmail.com" autocomplete="off">
                         <div style="font-size:.68rem;color:var(--c2);margin-top:4px;font-family:'Rajdhani',sans-serif"><i class="bi bi-info-circle me-1"></i>Only @gmail.com accounts allowed</div>
                     </div>
-                    <div class="mb-3"><label class="lbl"><i class="bi bi-lock-fill me-1"></i>Password *</label>
+                    <div class="mb-3">
+                        <label class="lbl"><i class="bi bi-lock-fill me-1"></i>Password *</label>
                         <div class="inp-wrap"><input type="password" class="form-control" id="suPass" placeholder="Min 6 characters"><i class="bi bi-eye inp-eye" onclick="togglePw('suPass',this)"></i></div>
                     </div>
-                    <div class="mb-3"><label class="lbl"><i class="bi bi-lock-fill me-1"></i>Confirm Password *</label>
+                    <div class="mb-3">
+                        <label class="lbl"><i class="bi bi-lock-fill me-1"></i>Confirm Password *</label>
                         <input type="password" class="form-control" id="suConf" placeholder="Repeat password">
                     </div>
-                    <div class="mb-3"><label class="lbl"><i class="bi bi-gift-fill me-1" style="color:var(--c3)"></i>Referral Code <span style="color:var(--txt3);font-size:.65rem;font-weight:400">(optional)</span></label>
+                    <div class="mb-3">
+                        <label class="lbl"><i class="bi bi-gift-fill me-1" style="color:var(--c3)"></i>Referral Code <span style="color:var(--txt3);font-size:.65rem;font-weight:400">(optional)</span></label>
                         <input type="text" class="form-control" id="suRef" placeholder="Friend ka referral code" style="text-transform:uppercase">
                     </div>
                     <div id="su1St" class="mb-2"></div>
                     <button type="button" class="btn-p btn-cyan w-100" style="justify-content:center" onclick="su1Next()"><i class="bi bi-arrow-right me-1"></i>Next — Profile Setup</button>
                     <div class="auth-divider">OR</div>
                     <button type="button" class="google-btn" onclick="doGoogleLogin()">
-                      <svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+                      <div class="g-circle"><svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg></div>
                       Sign Up with Google
                     </button>
                 </div>
@@ -2191,7 +2474,7 @@
                         <span style="color:var(--txt3);font-size:.65rem">Developed by</span>
                         <span class="dev-name" style="font-size:.65rem">J.S</span>
                         <span style="color:var(--txt3);font-size:.65rem">• for Gamers</span>
-                        <span class="dev-ver" style="font-size:.6rem">v2.0</span>
+                        <span class="dev-ver" style="font-size:.6rem">v3.0</span>
                     </span>
                 </div>
             </div>
@@ -2319,7 +2602,7 @@
                         <div class="spin-wrap">
                             <div class="spin-ptr"></div>
                             <div class="spin-c">
-                                <canvas id="spinCv" class="spin-canvas" width="250" height="250"></canvas>
+                                <canvas id="spinCv" class="spin-canvas" width="280" height="280"></canvas>
                                 <button class="spin-ctr" id="spinBtn" onclick="doSpin()">SPIN!</button>
                             </div>
                             <div id="spinMsg" style="font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--c3);min-height:24px;text-align:center"></div>
@@ -2459,6 +2742,48 @@
                         </div>
                     </div>
                 </div>
+                <!-- Settings Panel -->
+                <div class="panel mb-3" id="settingsPanel">
+                    <div class="ph"><span class="ph-title"><i class="bi bi-gear-fill"></i><span data-lang="settings">SETTINGS</span></span></div>
+                    <div class="pb" style="display:flex;flex-direction:column;gap:10px">
+                        <!-- Language -->
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--brd)">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <i class="bi bi-translate" style="color:var(--c2)"></i>
+                                <span style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem" data-lang="language">Language</span>
+                            </div>
+                            <select class="lang-select" id="settLangSel" onchange="changeLang(this.value)" style="width:auto;padding:4px 10px;font-size:.8rem">
+                                <option value="en">🇬🇧 English</option>
+                                <option value="ur">🇵🇰 اردو</option>
+                            </select>
+                        </div>
+                        <!-- Touch Sound -->
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--brd)">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <i class="bi bi-volume-up-fill" style="color:var(--c3)"></i>
+                                <span style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem" data-lang="touchSound">Touch Sound</span>
+                            </div>
+                            <div class="sett-toggle" id="toggleTouch" onclick="toggleSound('touch')" style="cursor:pointer">
+                                <div class="sett-track on" id="trackTouch">
+                                    <div class="sett-thumb"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Notification Sound -->
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <i class="bi bi-bell-fill" style="color:var(--c1)"></i>
+                                <span style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem" data-lang="notifSound">Notification Sound</span>
+                            </div>
+                            <div class="sett-toggle" id="toggleNotif" onclick="toggleSound('notification')" style="cursor:pointer">
+                                <div class="sett-track on" id="trackNotif">
+                                    <div class="sett-thumb"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Policies -->
                 <div class="panel mb-3" id="policiesPanel">
                     <div class="ph"><span class="ph-title"><i class="bi bi-file-text-fill"></i>POLICIES</span></div>
@@ -2740,6 +3065,12 @@
         var signInWithPopup = function(a, p) {
             return a.signInWithPopup(p);
         };
+        var signInWithRedirect = function(a, p) {
+            return a.signInWithRedirect(p);
+        };
+        var getRedirectResult = function(a) {
+            return a.getRedirectResult();
+        };
 
         /* ── Language System ── */
         var LANG = {
@@ -2747,13 +3078,43 @@
                 home: 'Home', battles: 'Battles', wallet: 'Wallet', profile: 'Profile',
                 notifications: 'NOTIFICATIONS', balance: 'BALANCE', winnings: 'WINNINGS',
                 liveBattles: 'LIVE BATTLES', streak: 'STREAK', noNotif: 'No notifications',
-                login: 'LOGIN', signup: 'Sign Up', logout: 'Logout'
+                login: 'LOGIN', signup: 'Sign Up', logout: 'Logout',
+                settings: 'SETTINGS', language: 'Language', touchSound: 'Touch Sound',
+                notifSound: 'Notification Sound', joinTournament: 'Join Battle',
+                enterFee: 'Entry Fee', prizePool: 'Prize Pool', myBattles: 'MY BATTLES',
+                leaderboard: 'LEADERBOARD', achievements: 'ACHIEVEMENTS',
+                profileInfo: 'PROFILE INFO', edit: 'Edit', save: 'Save',
+                cancel: 'Cancel', dailySpin: 'DAILY SPIN', spinNow: 'Spin Now!',
+                alreadySpun: 'Already spun today', deposit: 'Deposit', withdraw: 'Withdraw',
+                transactions: 'TRANSACTIONS', noTrans: 'No transactions yet',
+                referral: 'REFERRAL', copyCode: 'Copy Code', share: 'Share',
+                totalMatches: 'Matches', wins: 'Wins', kills: 'Kills',
+                winRate: 'Win Rate', totalEarned: 'Total Earned',
+                policies: 'POLICIES', privacy: 'Privacy Policy',
+                terms: 'Terms & Conditions', refund: 'Refund Policy',
+                fairPlay: 'Fair Play Policy', darkMode: 'Dark Mode',
+                on: 'ON', off: 'OFF'
             },
             ur: {
                 home: 'ہوم', battles: 'مقابلے', wallet: 'والٹ', profile: 'پروفائل',
                 notifications: 'اطلاعات', balance: 'بیلنس', winnings: 'جیت',
                 liveBattles: 'لائیو مقابلے', streak: 'سلسلہ', noNotif: 'کوئی اطلاع نہیں',
-                login: 'لاگ ان', signup: 'سائن اپ', logout: 'لاگ آوٹ'
+                login: 'لاگ ان', signup: 'سائن اپ', logout: 'لاگ آوٹ',
+                settings: 'ترتیبات', language: 'زبان', touchSound: 'ٹچ آواز',
+                notifSound: 'اطلاع آواز', joinTournament: 'مقابلہ جوائن کریں',
+                enterFee: 'داخلہ فیس', prizePool: 'انعامی رقم', myBattles: 'میرے مقابلے',
+                leaderboard: 'لیڈربورڈ', achievements: 'کامیابیاں',
+                profileInfo: 'پروفائل معلومات', edit: 'ترمیم', save: 'محفوظ',
+                cancel: 'منسوخ', dailySpin: 'روزانہ اسپن', spinNow: 'گھماؤ!',
+                alreadySpun: 'آج گھما چکے ہیں', deposit: 'جمع', withdraw: 'نکالیں',
+                transactions: 'لین دین', noTrans: 'کوئی لین دین نہیں',
+                referral: 'ریفرل', copyCode: 'کوڈ کاپی', share: 'شیئر',
+                totalMatches: 'میچ', wins: 'جیت', kills: 'کِل',
+                winRate: 'جیت کی شرح', totalEarned: 'کل کمائی',
+                policies: 'پالیسیاں', privacy: 'رازداری پالیسی',
+                terms: 'شرائط و ضوابط', refund: 'واپسی پالیسی',
+                fairPlay: 'منصفانہ کھیل پالیسی', darkMode: 'ڈارک موڈ',
+                on: 'آن', off: 'آف'
             }
         };
 
@@ -2765,53 +3126,65 @@
         function applyLang(lang) {
             var L = LANG[lang] || LANG.en;
             var dir = lang === 'ur' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
             document.documentElement.dir = dir;
-            // Bottom nav labels
+
+            /* Bottom nav */
             var bnBtns = document.querySelectorAll('.bn-btn span');
             var keys = ['home','battles','','wallet','profile'];
             bnBtns.forEach(function(el, i) { if (keys[i] && L[keys[i]]) el.textContent = L[keys[i]]; });
-            // Notification section title
+
+            /* Section titles via data-lang attribute */
+            document.querySelectorAll('[data-lang]').forEach(function(el) {
+                var key = el.getAttribute('data-lang');
+                if (L[key]) el.textContent = L[key];
+            });
+
+            /* Notification title */
             var notifTitle = document.querySelector('#sec-notif .sec-title span');
             if (notifTitle) notifTitle.innerHTML = '<i class="bi bi-bell-fill me-2" style="color:var(--c2)"></i>' + L.notifications;
-            // Lang selector sync
+
+            /* Spin button */
+            var sb = $('spinBtn');
+            if (sb && !sb.disabled) sb.textContent = L.spinNow || 'SPIN!';
+
+            /* No notif text */
+            var nn = document.querySelector('#notifList .empty-st p');
+            if (nn) nn.textContent = L.noNotif;
+
+            /* Lang selector sync */
             if ($('langSelector')) $('langSelector').value = lang;
+            if ($('settLangSel')) $('settLangSel').value = lang;
+
+            /* Font for Urdu */
+            document.body.style.fontFamily = lang === 'ur'
+                ? "'Noto Nastaliq Urdu', 'Rajdhani', sans-serif"
+                : "'Rajdhani', sans-serif";
+        }
+
+        /* ── Google Redirect Check (runs on every app open) ── */
+        /* ── Google Redirect Check ── */
+        function _checkGoogleRedirect() {
+            auth.getRedirectResult().then(function(result) {
+                if (result && result.user) {
+                    _saveGoogleUser(result.user);
+                }
+            }).catch(function(e) {
+                console.error('Redirect check:', e);
+            });
         }
 
         /* ── Google Login ── */
         function isMedianApp() {
-            return typeof median !== 'undefined' || /median|gonative/i.test(navigator.userAgent);
+            return typeof median !== 'undefined' || /gonative/i.test(navigator.userAgent);
         }
 
-        async function doGoogleLogin() {
-            showL(true, 'Google se login ho raha hai...');
-            try {
-                var provider = new GoogleAuthProvider();
-                provider.addScope('email');
-                provider.addScope('profile');
-
-                if (isMedianApp()) {
-                    /* Median/GoNative app: use signInWithRedirect */
-                    /* Save flag so we know redirect is coming */
-                    try { localStorage.setItem('jst_google_redirect', '1'); } catch(e){}
-                    auth.signInWithRedirect(provider);
-                } else {
-                    /* Normal browser: use popup */
-                    var result = await signInWithPopup(auth, provider);
-                    await _handleGoogleUser(result.user);
-                }
-            } catch (e) {
-                showL(false);
-                var liStat = $('liStat') || $('su1St');
-                if (liStat) showA(liStat.id, 'Google login failed: ' + (e.message || e.code || ''), 'danger');
-            }
-        }
-
-        async function _handleGoogleUser(u) {
+        async function _saveGoogleUser(u) {
             if (!u) return;
             try {
                 var snap = await get(ref(db, 'users/' + u.uid));
                 if (!snap.exists()) {
-                    var code = 'JST' + Math.random().toString(36).substring(2, 8).toUpperCase();
+                    var code = 'FFT' + Math.random().toString(36).substring(2, 8).toUpperCase();
                     await set(ref(db, 'users/' + u.uid), {
                         uid: u.uid,
                         displayName: u.displayName || 'Player',
@@ -2827,24 +3200,44 @@
                         profileComplete: false
                     });
                 }
-            } catch(e) {
-                console.error('Google user save error:', e);
+            } catch(e) { console.error('Google user save:', e); }
+        }
+
+        async function doGoogleLogin() {
+            showL(true, 'Google se login ho raha hai...');
+            try {
+                var provider = new GoogleAuthProvider();
+                provider.addScope('email');
+                provider.addScope('profile');
+
+                if (isMedianApp()) {
+                    /* Median app: Deep Link se wapas aao */
+                    /* Firebase redirect URL mein app scheme add karo */
+                    provider.setCustomParameters({
+                        redirect_uri: 'fftournament://mr5220526-web.github.io'
+                    });
+                    await signInWithRedirect(auth, provider);
+                } else {
+                    /* Normal browser: popup */
+                    var result = await signInWithPopup(auth, provider);
+                    await _saveGoogleUser(result.user);
+                }
+            } catch (e) {
+                showL(false);
+                var liStat = $('liStat') || $('su1St');
+                if (liStat) showA(liStat.id, 'Google login failed: ' + (e.message || e.code || ''), 'danger');
             }
         }
 
-        /* Handle redirect result (for Median app) */
-        function _checkGoogleRedirect() {
-            var flag = '';
-            try { flag = localStorage.getItem('jst_google_redirect'); } catch(e){}
-            if (!flag) return;
-            try { localStorage.removeItem('jst_google_redirect'); } catch(e){}
-            auth.getRedirectResult().then(function(result) {
-                if (result && result.user) {
-                    _handleGoogleUser(result.user);
+        /* ── Deep Link Handler — app pe wapas aao ── */
+        function _handleDeepLink() {
+            if (!isMedianApp()) return;
+            try {
+                if (typeof median !== 'undefined' && median.share) {
+                    /* Median JS Bridge — URL scheme handle */
                 }
-            }).catch(function(e) {
-                console.error('Redirect result error:', e);
-            });
+                /* onAuthStateChanged already handles redirect to app */
+            } catch(e) {}
         }
 
 
@@ -2865,7 +3258,16 @@
             app = _fa(firebaseConfig);
             db = _fdb(app);
             auth = _fauth(app);
-            setPersistence(auth, 'LOCAL').catch(function() {});
+            /* Persistence — login save karo (firebase.auth.Auth.Persistence.LOCAL) */
+            try {
+                auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(){});
+            } catch(e) {}
+            /* Check redirect result on every app start — Google login ke baad app pe wapas aao */
+            auth.getRedirectResult().then(function(result) {
+                if (result && result.user) {
+                    _saveGoogleUser(result.user);
+                }
+            }).catch(function(e) { console.error('getRedirectResult:', e); });
         } catch (e) {
             console.error('Firebase:', e);
         }
@@ -2881,7 +3283,7 @@
             _depM = null,
             _wdM = null;
         var _sP = [10, 25, 50, 100, 200, 5];
-        var _sC = ['#7C3AED', '#06B6D4', '#F59E0B', '#10B981', '#EF4444', '#EC4899'];
+        var _sC = ['#7C3AED', '#06B6D4', '#F59E0B', '#10B981', '#EF4444', '#EC4899']; /* legacy */
         var _sA = 0,
             _spinning = false,
             _tTab = 'upcoming';
@@ -2939,9 +3341,79 @@
             }
         }
 
+        /* ══════════════════════════════
+           SOUND ENGINE — Lightweight
+           All sounds via Web Audio API
+        ══════════════════════════════ */
+        var _AC = null;
+        var _soundSettings = {
+            touch: true,
+            notification: true
+        };
+        function _loadSoundSettings() {
+            try {
+                var s = localStorage.getItem('fft_sounds');
+                if (s) _soundSettings = JSON.parse(s);
+            } catch(e) {}
+        }
+        function _saveSoundSettings() {
+            try { localStorage.setItem('fft_sounds', JSON.stringify(_soundSettings)); } catch(e) {}
+        }
+        function _ac() {
+            if (!_AC) {
+                try { _AC = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return null; }
+            }
+            if (_AC && _AC.state === 'suspended') _AC.resume();
+            return _AC;
+        }
+        function _beep(freq, type, vol, dur, delay) {
+            try {
+                var ctx = _ac(); if (!ctx) return;
+                var o = ctx.createOscillator();
+                var g = ctx.createGain();
+                o.connect(g); g.connect(ctx.destination);
+                o.frequency.value = freq || 440;
+                o.type = type || 'sine';
+                var t = ctx.currentTime + (delay || 0);
+                g.gain.setValueAtTime(vol || 0.1, t);
+                g.gain.exponentialRampToValueAtTime(0.001, t + (dur || 0.1));
+                o.start(t); o.stop(t + (dur || 0.1));
+            } catch(e) {}
+        }
+        function playTouchSound() {
+            if (!_soundSettings.touch) return;
+            _beep(600, 'sine', 0.08, 0.04);
+        }
+        function playNotifSound() {
+            if (!_soundSettings.notification) return;
+            _beep(880, 'sine', 0.12, 0.1, 0);
+            _beep(1100, 'sine', 0.12, 0.1, 0.12);
+        }
+        function playSuccessSound() {
+            _beep(523, 'sine', 0.12, 0.1, 0);
+            _beep(659, 'sine', 0.12, 0.1, 0.1);
+            _beep(784, 'sine', 0.12, 0.15, 0.2);
+        }
+        function playErrorSound() {
+            _beep(300, 'sawtooth', 0.1, 0.15, 0);
+            _beep(200, 'sawtooth', 0.1, 0.2, 0.15);
+        }
+
+        /* Global touch sound on all buttons/clickable */
+        document.addEventListener('touchstart', function(e) {
+            var t = e.target;
+            if (t && (t.tagName === 'BUTTON' || t.closest('button') || t.closest('.bn-btn') || t.closest('.scard') || t.closest('.bn-spin'))) {
+                playTouchSound();
+            }
+        }, { passive: true });
+
         function toast(msg, type) {
             var w = $('toast-wrap');
             if (!w) return;
+            /* Play sound based on type */
+            if (type === 'success') playSuccessSound();
+            else if (type === 'danger') playErrorSound();
+            else playNotifSound();
             var c = {
                 success: 'var(--c4)',
                 danger: 'var(--c5)',
@@ -2956,9 +3428,7 @@
             setTimeout(function() {
                 d.style.opacity = '0';
                 d.style.transition = 'opacity .3s';
-                setTimeout(function() {
-                    d.remove();
-                }, 300);
+                setTimeout(function() { d.remove(); }, 300);
             }, 3000);
         }
 
@@ -3074,7 +3544,7 @@
             if (id === 'sec-home') loadHome();
             else if (id === 'sec-tournaments') loadTours();
             else if (id === 'sec-wallet') loadWallet();
-            else if (id === 'sec-profile') loadProfile();
+            else if (id === 'sec-profile') { loadProfile(); setTimeout(_applySoundSettings, 100); }
             else if (id === 'sec-notif') loadNotifs();
             else if (id === 'sec-spin') loadSpin();
         }
@@ -4510,102 +4980,221 @@
             }
         }
 
+        /* Gamer colors for wheel segments */
+        var _sColors = [
+            ['#4C1D95','#7C3AED'], ['#0E7490','#06B6D4'],
+            ['#92400E','#F59E0B'], ['#065F46','#10B981'],
+            ['#991B1B','#EF4444'], ['#9D174D','#EC4899'],
+            ['#1E3A5F','#3B82F6'], ['#3D2B00','#FFA500']
+        ];
+
         function drawWheel() {
             var cv = $('spinCv');
             if (!cv) return;
             var ctx = cv.getContext('2d');
-            var prizes = _sP,
-                n = prizes.length,
-                arc = (Math.PI * 2) / n;
-            ctx.clearRect(0, 0, 250, 250);
+            var prizes = _sP, n = prizes.length;
+            var arc = (Math.PI * 2) / n;
+            var cx = 140, cy = 140, R = 130;
+            cv.width = 280; cv.height = 280;
+            ctx.clearRect(0, 0, 280, 280);
+
             for (var i = 0; i < n; i++) {
                 var angle = arc * i + _sA;
+                var col = _sColors[i % _sColors.length];
+
+                /* Segment gradient */
+                var grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
+                grd.addColorStop(0, col[1]);
+                grd.addColorStop(1, col[0]);
                 ctx.beginPath();
-                ctx.moveTo(125, 125);
-                ctx.arc(125, 125, 120, angle, angle + arc);
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, R, angle, angle + arc);
                 ctx.closePath();
-                ctx.fillStyle = _sC[i % _sC.length];
+                ctx.fillStyle = grd;
                 ctx.fill();
-                ctx.strokeStyle = 'rgba(0,0,0,.25)';
+
+                /* Segment border — glowing */
+                ctx.strokeStyle = 'rgba(0,0,0,.35)';
                 ctx.lineWidth = 2;
                 ctx.stroke();
+
+                /* Outer rim glow line */
                 ctx.save();
-                ctx.translate(125, 125);
+                ctx.beginPath();
+                ctx.arc(cx, cy, R - 1, angle, angle + arc);
+                ctx.strokeStyle = 'rgba(255,255,255,.12)';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                ctx.restore();
+
+                /* Prize text */
+                ctx.save();
+                ctx.translate(cx, cy);
                 ctx.rotate(angle + arc / 2);
                 ctx.textAlign = 'right';
+
+                /* Glow shadow */
+                ctx.shadowColor = 'rgba(0,0,0,.8)';
+                ctx.shadowBlur = 6;
+
+                /* Amount */
                 ctx.fillStyle = '#fff';
-                ctx.font = 'bold 13px Orbitron,sans-serif';
-                ctx.shadowColor = 'rgba(0,0,0,.5)';
-                ctx.shadowBlur = 4;
-                ctx.fillText(prizes[i] > 0 ? 'J' + prizes[i] : 'Try!', 113, 5);
+                ctx.font = 'bold 12px Orbitron,sans-serif';
+                ctx.fillText(prizes[i] > 0 ? '₨' + prizes[i] : 'Try!', R - 8, 4);
+
+                /* Small star icon for big prizes */
+                if (prizes[i] >= 100) {
+                    ctx.font = '10px sans-serif';
+                    ctx.fillText('★', R - 8, -10);
+                }
                 ctx.restore();
             }
+
+            /* Outer metallic ring */
+            var ringGrd = ctx.createLinearGradient(0, 0, 280, 280);
+            ringGrd.addColorStop(0, 'rgba(255,255,255,.25)');
+            ringGrd.addColorStop(.5, 'rgba(255,255,255,.05)');
+            ringGrd.addColorStop(1, 'rgba(255,255,255,.2)');
             ctx.beginPath();
-            ctx.arc(125, 125, 34, 0, Math.PI * 2);
-            ctx.fillStyle = 'var(--bg2)';
-            ctx.fill();
-            ctx.strokeStyle = 'rgba(255,255,255,.15)';
-            ctx.lineWidth = 3;
+            ctx.arc(cx, cy, R + 4, 0, Math.PI * 2);
+            ctx.strokeStyle = ringGrd;
+            ctx.lineWidth = 5;
             ctx.stroke();
+
+            /* Center hub */
+            var hubGrd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 38);
+            hubGrd.addColorStop(0, '#2a1560');
+            hubGrd.addColorStop(1, '#0d0822');
+            ctx.beginPath();
+            ctx.arc(cx, cy, 38, 0, Math.PI * 2);
+            ctx.fillStyle = hubGrd;
+            ctx.fill();
+
+            /* Hub border gold */
+            ctx.beginPath();
+            ctx.arc(cx, cy, 38, 0, Math.PI * 2);
+            ctx.strokeStyle = '#FFD700';
+            ctx.lineWidth = 3;
+            ctx.shadowColor = 'rgba(255,215,0,.8)';
+            ctx.shadowBlur = 10;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            /* Hub inner ring */
+            ctx.beginPath();
+            ctx.arc(cx, cy, 30, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(255,215,0,.3)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        /* ── Spin Sound using Web Audio API ── */
+        var _spinAudioCtx = null;
+        function _getAudioCtx() {
+            if (!_spinAudioCtx) _spinAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            return _spinAudioCtx;
+        }
+        function _playSpinTick() {
+            try {
+                var ctx = _getAudioCtx();
+                var osc = ctx.createOscillator();
+                var gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.value = 800;
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.05);
+            } catch(e) {}
+        }
+        function _playWinSound(big) {
+            try {
+                var ctx = _getAudioCtx();
+                var notes = big ? [523, 659, 784, 1047] : [523, 659, 784];
+                notes.forEach(function(freq, i) {
+                    var osc = ctx.createOscillator();
+                    var gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.frequency.value = freq;
+                    osc.type = 'sine';
+                    var t = ctx.currentTime + i * 0.15;
+                    gain.gain.setValueAtTime(0.25, t);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+                    osc.start(t);
+                    osc.stop(t + 0.3);
+                });
+            } catch(e) {}
+        }
+        function _playLoseSound() {
+            try {
+                var ctx = _getAudioCtx();
+                var osc = ctx.createOscillator();
+                var gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.value = 200;
+                osc.type = 'sawtooth';
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.4);
+            } catch(e) {}
         }
 
         async function doSpin() {
             if (_spinning || !cu || !db) return;
             var spun = uD.lastSpinDate === new Date().toDateString();
-            if (spun) {
-                toast('Aaj already spin ho gayi!', 'warning');
-                return;
-            }
-            if (feats.spinWheel === false) {
-                toast('Spin wheel disabled', 'warning');
-                return;
-            }
+            if (spun) { toast('Aaj already spin ho gayi!', 'warning'); return; }
+            if (feats.spinWheel === false) { toast('Spin wheel disabled', 'warning'); return; }
+
+            /* Resume audio context on user gesture */
+            try { _getAudioCtx().resume(); } catch(e) {}
+
             _spinning = true;
             var sb = $('spinBtn');
-            if (sb) {
-                sb.disabled = true;
-                sb.textContent = 'SPINNING...';
-            }
+            if (sb) { sb.disabled = true; sb.textContent = 'SPINNING...'; }
             if ($('spinMsg')) $('spinMsg').textContent = '';
 
             var n = _sP.length;
             var arc = (Math.PI * 2) / n;
-            /* Randomly pick winning segment */
             var winIdx = Math.floor(Math.random() * n);
             var prize = _sP[winIdx];
 
-            /* Pointer is at TOP = -PI/2
-               We need winning segment center to land exactly under pointer.
-               Segment i center angle (from angle=0) = i*arc + arc/2
-               After rotation by finalAngle, segment center = i*arc + arc/2 + finalAngle
-               We want that = -PI/2 + k*2*PI  (pointing up, any full rotation)
-               So: finalAngle = -PI/2 - (winIdx*arc + arc/2) + k*2*PI
-               Add extra 5 full rotations for visual effect */
             var extraSpins = 5;
             var finalAngle = -Math.PI / 2 - (winIdx * arc + arc / 2) + extraSpins * (Math.PI * 2);
-            /* Normalize so we always spin forward */
             var currentAngle = _sA % (Math.PI * 2);
             var spinAmount = finalAngle - currentAngle;
             if (spinAmount < Math.PI * 2) spinAmount += Math.PI * 2 * extraSpins;
 
-            var start = null,
-                dur = 4500,
-                sa = _sA;
+            var start = null, dur = 4500, sa = _sA;
+            var lastTickAngle = 0, tickInterval = arc;
 
             function anim(ts) {
                 if (!start) start = ts;
                 var p = Math.min(1, (ts - start) / dur);
-                /* Ease out quart */
                 var ease = 1 - Math.pow(1 - p, 4);
                 _sA = sa + spinAmount * ease;
                 drawWheel();
+
+                /* Tick sound on each segment pass */
+                var currentSeg = Math.floor(_sA / tickInterval);
+                if (currentSeg !== lastTickAngle && p < 0.95) {
+                    _playSpinTick();
+                    lastTickAngle = currentSeg;
+                }
+
                 if (p < 1) {
                     requestAnimationFrame(anim);
                 } else {
-                    /* Snap exactly */
                     _sA = sa + spinAmount;
                     drawWheel();
                     _spinning = false;
+                    /* Play win/lose sound */
+                    if (prize >= 100) _playWinSound(true);
+                    else if (prize > 0) _playWinSound(false);
+                    else _playLoseSound();
                     saveSpin(prize);
                 }
             }
@@ -4642,6 +5231,37 @@
                 updateHdr();
             } catch (e) {
                 console.error('Spin save:', e);
+            }
+        }
+
+        /* Sound toggle */
+        function toggleSound(type) {
+            _ac(); /* Resume audio context */
+            _soundSettings[type] = !_soundSettings[type];
+            _saveSoundSettings();
+            var track = $(type === 'touch' ? 'trackTouch' : 'trackNotif');
+            if (track) {
+                if (_soundSettings[type]) track.classList.add('on');
+                else track.classList.remove('on');
+            }
+            /* Play test sound */
+            if (_soundSettings[type]) {
+                if (type === 'touch') playTouchSound();
+                else playNotifSound();
+            }
+        }
+
+        function _applySoundSettings() {
+            _loadSoundSettings();
+            var trackT = $('trackTouch');
+            var trackN = $('trackNotif');
+            if (trackT) {
+                if (_soundSettings.touch) trackT.classList.add('on');
+                else trackT.classList.remove('on');
+            }
+            if (trackN) {
+                if (_soundSettings.notification) trackN.classList.add('on');
+                else trackN.classList.remove('on');
             }
         }
 
@@ -5421,6 +6041,7 @@
             }
             initTheme();
             _checkGoogleRedirect();
+            _loadSoundSettings();
 
             /* Real-time feats listener so Google button updates when admin changes it */
             onValue(ref(db, 'appFeatures'), function(snap) {
@@ -5428,7 +6049,6 @@
             });
 
             onAuthStateChanged(auth, function(user) {
-                showL(false);
                 if (user) {
                     cu = user;
                     showL(true, 'LOADING...');
@@ -5473,7 +6093,7 @@
                     $('mainWrap').style.display = 'none';
                     $('maintScreen').classList.remove('show');
                     $('authWrap').style.display = 'flex';
-                    showL(true, '');
+                    showL(false);
                     Promise.all([
                         get(ref(db, 'settings')).catch(function() {
                             return {
