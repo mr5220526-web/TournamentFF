@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 
 <head>
@@ -300,17 +300,6 @@
         * { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
         .sec { will-change: auto !important; transform: none !important; }
         main { overflow-x: hidden; -webkit-overflow-scrolling: touch; }
-
-        /* ═══ LOW-END DEVICE PERFORMANCE ═══ */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-        }
-        .lite-mode .hdr, .lite-mode .bnav { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
-        .lite-mode body::before, .lite-mode .panel::before, .lite-mode .hdr::after, .lite-mode .bnav::before { display: none !important; }
-        .lite-mode .bn-spin-pulse { display: none !important; }
-        .lite-mode .sec { animation: none !important; }
-        .lite-mode .sk { animation: none !important; background: var(--bg3) !important; }
-        .mc { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
 
         .hdr {
             position: fixed;
@@ -1546,7 +1535,7 @@
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 62px; height: 62px;
+            width: min(62px, 22%); height: min(62px, 22%);
             border-radius: 50%;
             background: linear-gradient(145deg, #1e1040, #0d0822);
             border: 3px solid #FFD700;
@@ -1617,6 +1606,82 @@
         .sett-track.on .sett-thumb {
             transform: translateX(20px)
         }
+
+        /* ═══ LITE MODE ═══ */
+        body.lite-mode [data-theme="dark"] body::before,
+        body.lite-mode::before { display: none !important }
+        body.lite-mode .spin-canvas {
+            box-shadow: 0 0 0 3px rgba(255,255,255,.1) !important;
+        }
+        body.lite-mode .panel::before,
+        body.lite-mode .hdr::after,
+        body.lite-mode .bnav::before { display: none !important }
+        body.lite-mode .bn-spin-pulse,
+        body.lite-mode .auth-coin-wrap::before,
+        body.lite-mode .auth-coin-wrap::after,
+        body.lite-mode .g-circle::before { animation: none !important }
+        body.lite-mode .spin-c::before,
+        body.lite-mode .spin-c::after { display: none !important }
+        body.lite-mode .spin-ctr { animation: none !important; box-shadow: 0 0 8px rgba(255,215,0,.3) !important }
+        body.lite-mode .auth-coin { animation: none !important; box-shadow: 0 0 14px rgba(255,185,0,.5) !important }
+        body.lite-mode .spin-ptr { animation: none !important }
+        body.lite-mode .sk { animation: none !important; background: var(--bg3) !important }
+        body.lite-mode * { transition: none !important; animation-duration: 0.01ms !important }
+        body.lite-mode .tour-card { box-shadow: none !important }
+        body.lite-mode .hdr { backdrop-filter: none !important; -webkit-backdrop-filter: none !important }
+        body.lite-mode .bnav { backdrop-filter: none !important; -webkit-backdrop-filter: none !important }
+        body.lite-mode .auth-box { backdrop-filter: none !important; -webkit-backdrop-filter: none !important }
+        body.lite-mode .wb-item { backdrop-filter: none !important }
+        body.lite-mode .ldr-ring { animation: spin 1s linear infinite !important }
+
+        /* ═══ MOBILE FIXES ═══ */
+        @media (max-width: 480px) {
+            .stat-grid { grid-template-columns: repeat(2, 1fr) !important }
+            .tour-meta { grid-template-columns: repeat(3,1fr) }
+            .wb-grid { grid-template-columns: repeat(3,1fr) }
+            .spin-canvas { width: min(260px, calc(100vw - 80px)) !important; height: min(260px, calc(100vw - 80px)) !important }
+            .mc { padding: 10px !important }
+            .hdr { padding: 0 10px !important }
+            .bn-btn span { font-size: .55rem }
+            .ph-title { font-size: .68rem !important }
+            .sec-title { font-size: .78rem !important }
+            .wallet-card { padding: 14px !important }
+            .hdr-balance { font-size: .62rem; padding: 3px 7px }
+            .scard { padding: 10px 8px !important }
+            .scard-val { font-size: .9rem !important }
+            .modal-dialog { margin: 8px !important }
+            .auth-box { padding: 0 12px 12px !important }
+            .auth-title { font-size: .82rem !important }
+            body { padding-top: 58px; padding-bottom: 68px }
+        }
+        @media (max-width: 360px) {
+            .hdr-balance { display: none }
+            .scard-ico { width: 32px !important; height: 32px !important }
+            .bn-btn span { font-size: .5rem }
+            .tm-val { font-size: .7rem !important }
+        }
+        /* Safe area for iPhone notch/home bar */
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .bnav { padding-bottom: env(safe-area-inset-bottom) }
+            body { padding-bottom: calc(72px + env(safe-area-inset-bottom)) }
+        }
+
+        /* ═══ EXTRA MOBILE POLISH ═══ */
+        /* Wallet balance responsive */
+        @media (max-width: 380px) {
+            #wTotal { font-size: 1.7rem !important }
+            .wb-val { font-size: .72rem !important }
+        }
+        /* Prevent horizontal scroll on any section */
+        .sec, .mc, .panel, .tour-card { max-width: 100%; overflow-x: hidden }
+        /* Better tap targets */
+        .bn-btn { min-height: 48px }
+        .btn-p { min-height: 40px }
+        .hdr-icon-btn { min-width: 38px; min-height: 38px }
+        /* Fix overflow in tour modal */
+        .modal-body { overflow-x: hidden }
+        /* Smooth scroll */
+        main { scroll-behavior: smooth }
 
         /* ═══ LEADERBOARD ═══ */
         .lb-row {
@@ -2781,13 +2846,28 @@
                             </div>
                         </div>
                         <!-- Notification Sound -->
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--brd)">
                             <div style="display:flex;align-items:center;gap:8px">
                                 <i class="bi bi-bell-fill" style="color:var(--c1)"></i>
                                 <span style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem" data-lang="notifSound">Notification Sound</span>
                             </div>
                             <div class="sett-toggle" id="toggleNotif" onclick="toggleSound('notification')" style="cursor:pointer">
                                 <div class="sett-track on" id="trackNotif">
+                                    <div class="sett-thumb"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Lite Mode -->
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <i class="bi bi-lightning-fill" style="color:var(--c3)"></i>
+                                <div>
+                                    <span style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem">Lite Mode</span>
+                                    <div style="font-size:.68rem;color:var(--txt3);font-family:'Rajdhani',sans-serif;margin-top:1px">Animations band — fast performance</div>
+                                </div>
+                            </div>
+                            <div class="sett-toggle" id="toggleLite" onclick="toggleLiteMode()" style="cursor:pointer">
+                                <div class="sett-track" id="trackLite">
                                     <div class="sett-thumb"></div>
                                 </div>
                             </div>
@@ -2959,9 +3039,9 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/firebase@10.12.2/firebase-app-compat.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/firebase@10.12.2/firebase-database-compat.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/firebase@10.12.2/firebase-auth-compat.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/firebase@9.22.0/firebase-app-compat.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/firebase@9.22.0/firebase-database-compat.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/firebase@9.22.0/firebase-auth-compat.min.js" crossorigin="anonymous"></script>
     <script>
         window.onerror = function() {
             return true;
@@ -3173,50 +3253,21 @@
                 : "'Rajdhani', sans-serif";
         }
 
+        /* ── Google Redirect Check (runs on every app open) ── */
         /* ── Google Redirect Check ── */
-        /* Yeh function getRedirectResult se Google login result check karta hai.
-           Low-end / Android browsers mein popup ki jagah redirect use hota hai. */
         function _checkGoogleRedirect() {
-            if (!auth) return;
-            showL(true, 'Google login check ho raha hai...');
             auth.getRedirectResult().then(function(result) {
-                showL(false);
                 if (result && result.user) {
                     _saveGoogleUser(result.user);
-                    /* onAuthStateChanged khud baqi handle karega */
                 }
-                /* Agar result null hai matlab koi redirect nahi tha — normal flow */
             }).catch(function(e) {
-                showL(false);
-                /* Redirect errors silently ignore karo — normal app open par bhi yeh call hoti hai */
-                if (e.code && e.code !== 'auth/no-auth-event') {
-                    console.warn('Redirect result error:', e.code);
-                }
+                console.error('Redirect check:', e);
             });
         }
 
         /* ── Google Login ── */
         function isMedianApp() {
             return typeof median !== 'undefined' || /gonative/i.test(navigator.userAgent);
-        }
-
-        /* Check karo browser popup support karta hai ya nahi */
-        function _supportsPopup() {
-            try {
-                /* sessionStorage accessible hai? */
-                sessionStorage.setItem('_pp_test', '1');
-                sessionStorage.removeItem('_pp_test');
-                /* Chrome Custom Tab / Android WebView mein popup usually fail hoti hai */
-                var ua = navigator.userAgent || '';
-                var isAndroidWebView = /wv/.test(ua) && /Android/.test(ua);
-                var isFBBrowser = /FBAN|FBAV/.test(ua);
-                var isInstagram = /Instagram/.test(ua);
-                if (isAndroidWebView || isFBBrowser || isInstagram) return false;
-                return true;
-            } catch(e) {
-                /* sessionStorage inaccessible = popup fail hogi */
-                return false;
-            }
         }
 
         async function _saveGoogleUser(u) {
@@ -3249,58 +3300,23 @@
                 var provider = new GoogleAuthProvider();
                 provider.addScope('email');
                 provider.addScope('profile');
-                provider.setCustomParameters({ prompt: 'select_account' });
 
-                if (_supportsPopup()) {
-                    /* Desktop ya capable browser — popup use karo */
-                    var result = await auth.signInWithPopup(provider);
-                    if (result && result.user) {
-                        await _saveGoogleUser(result.user);
-                        /* onAuthStateChanged khud app load karega */
-                    }
+                if (isMedianApp()) {
+                    /* Median app: Deep Link se wapas aao */
+                    /* Firebase redirect URL mein app scheme add karo */
+                    provider.setCustomParameters({
+                        redirect_uri: 'fftournament://mr5220526-web.github.io'
+                    });
+                    await signInWithRedirect(auth, provider);
                 } else {
-                    /* Android low-end / WebView / partitioned storage — redirect use karo */
-                    await auth.signInWithRedirect(provider);
-                    /* Page reload hogi, _checkGoogleRedirect result pakdega */
+                    /* Normal browser: popup */
+                    var result = await signInWithPopup(auth, provider);
+                    await _saveGoogleUser(result.user);
                 }
             } catch (e) {
                 showL(false);
-                if (
-                    e.code === 'auth/popup-closed-by-user' ||
-                    e.code === 'auth/cancelled-popup-request'
-                ) {
-                    return; /* User ne popup band kiya — silent */
-                }
-                /* Popup fail hui to redirect try karo */
-                if (
-                    e.code === 'auth/popup-blocked' ||
-                    e.code === 'auth/operation-not-supported-in-this-environment' ||
-                    (e.message && e.message.toLowerCase().includes('sessionstorage'))
-                ) {
-                    try {
-                        showL(true, 'Redirect se login ho raha hai...');
-                        var provider2 = new GoogleAuthProvider();
-                        provider2.addScope('email');
-                        provider2.addScope('profile');
-                        await auth.signInWithRedirect(provider2);
-                        return;
-                    } catch(e2) {
-                        showL(false);
-                    }
-                }
-                var msg = '';
-                if (e.code === 'auth/network-request-failed')
-                    msg = 'Internet connection check karo.';
-                else if (e.code === 'auth/user-disabled')
-                    msg = 'Yeh account disabled hai.';
-                else if (e.code === 'auth/operation-not-allowed')
-                    msg = 'Google login enable nahi hai. Admin se rabta karo.';
-                else
-                    msg = 'Google login failed: ' + (e.message || e.code || 'Unknown error');
-
                 var liStat = $('liStat') || $('su1St');
-                if (liStat) showA(liStat.id, msg, 'danger');
-                else console.error('Google login error:', e);
+                if (liStat) showA(liStat.id, 'Google login failed: ' + (e.message || e.code || ''), 'danger');
             }
         }
 
@@ -3333,13 +3349,18 @@
             app = _fa(firebaseConfig);
             db = _fdb(app);
             auth = _fauth(app);
-            /* Firebase compat SDK mein LOCAL persistence DEFAULT hai —
-               explicitly set karna zaroori nahi, lekin karte hain safety ke liye */
-            auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e){
-                console.warn('setPersistence:', e.message);
-            });
+            /* Persistence — login save karo (firebase.auth.Auth.Persistence.LOCAL) */
+            try {
+                auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(){});
+            } catch(e) {}
+            /* Check redirect result on every app start — Google login ke baad app pe wapas aao */
+            auth.getRedirectResult().then(function(result) {
+                if (result && result.user) {
+                    _saveGoogleUser(result.user);
+                }
+            }).catch(function(e) { console.error('getRedirectResult:', e); });
         } catch (e) {
-            console.error('Firebase init:', e);
+            console.error('Firebase:', e);
         }
 
         /* State */
@@ -3428,6 +3449,30 @@
         }
         function _saveSoundSettings() {
             try { localStorage.setItem('fft_sounds', JSON.stringify(_soundSettings)); } catch(e) {}
+        }
+
+        /* ══════════════════════════════
+           LITE MODE — Performance Toggle
+        ══════════════════════════════ */
+        function _loadLiteMode() {
+            try {
+                var v = localStorage.getItem('fft_litemode');
+                if (v === '1') {
+                    document.body.classList.add('lite-mode');
+                    var tr = document.getElementById('trackLite');
+                    if (tr) tr.classList.add('on');
+                }
+            } catch(e) {}
+        }
+        function toggleLiteMode() {
+            var isOn = document.body.classList.toggle('lite-mode');
+            try { localStorage.setItem('fft_litemode', isOn ? '1' : '0'); } catch(e) {}
+            var tr = document.getElementById('trackLite');
+            if (tr) {
+                if (isOn) tr.classList.add('on');
+                else tr.classList.remove('on');
+            }
+            toast(isOn ? '⚡ Lite Mode ON — Fast Mode!' : '✨ Lite Mode OFF', isOn ? 'info' : 'info');
         }
         function _ac() {
             if (!_AC) {
@@ -5064,9 +5109,11 @@
             var ctx = cv.getContext('2d');
             var prizes = _sP, n = prizes.length;
             var arc = (Math.PI * 2) / n;
-            var cx = 140, cy = 140, R = 130;
-            cv.width = 280; cv.height = 280;
-            ctx.clearRect(0, 0, 280, 280);
+            /* Responsive size — small phones pe shrink */
+            var maxSz = Math.min(280, window.innerWidth - 80);
+            cv.width = maxSz; cv.height = maxSz;
+            var cx = maxSz / 2, cy = maxSz / 2, R = maxSz / 2 - 10;
+            ctx.clearRect(0, 0, maxSz, maxSz);
 
             for (var i = 0; i < n; i++) {
                 var angle = arc * i + _sA;
@@ -5121,7 +5168,7 @@
             }
 
             /* Outer metallic ring */
-            var ringGrd = ctx.createLinearGradient(0, 0, 280, 280);
+            var ringGrd = ctx.createLinearGradient(0, 0, maxSz, maxSz);
             ringGrd.addColorStop(0, 'rgba(255,255,255,.25)');
             ringGrd.addColorStop(.5, 'rgba(255,255,255,.05)');
             ringGrd.addColorStop(1, 'rgba(255,255,255,.2)');
@@ -5132,17 +5179,18 @@
             ctx.stroke();
 
             /* Center hub */
-            var hubGrd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 38);
+            var hubR = Math.round(R * 0.27);
+            var hubGrd = ctx.createRadialGradient(cx, cy, 0, cx, cy, hubR + 5);
             hubGrd.addColorStop(0, '#2a1560');
             hubGrd.addColorStop(1, '#0d0822');
             ctx.beginPath();
-            ctx.arc(cx, cy, 38, 0, Math.PI * 2);
+            ctx.arc(cx, cy, hubR, 0, Math.PI * 2);
             ctx.fillStyle = hubGrd;
             ctx.fill();
 
             /* Hub border gold */
             ctx.beginPath();
-            ctx.arc(cx, cy, 38, 0, Math.PI * 2);
+            ctx.arc(cx, cy, hubR, 0, Math.PI * 2);
             ctx.strokeStyle = '#FFD700';
             ctx.lineWidth = 3;
             ctx.shadowColor = 'rgba(255,215,0,.8)';
@@ -5152,7 +5200,7 @@
 
             /* Hub inner ring */
             ctx.beginPath();
-            ctx.arc(cx, cy, 30, 0, Math.PI * 2);
+            ctx.arc(cx, cy, hubR - 8, 0, Math.PI * 2);
             ctx.strokeStyle = 'rgba(255,215,0,.3)';
             ctx.lineWidth = 1;
             ctx.stroke();
@@ -6104,9 +6152,6 @@
         }
 
         /* APP START */
-        /* Flag: agar redirect ho raha hai to onAuthStateChanged ko wait karwao */
-        var _googleRedirectPending = false;
-
         function _startApp() {
             if (!app || !auth || !db) {
                 setTimeout(_startApp, 300);
@@ -6115,28 +6160,13 @@
             initTheme();
             _checkGoogleRedirect();
             _loadSoundSettings();
-            /* Low-end device detection — slow devices ko lite-mode mein daal do */
-            (function() {
-                try {
-                    var t0 = performance.now();
-                    var sum = 0;
-                    for (var i = 0; i < 500000; i++) sum += i;
-                    var elapsed = performance.now() - t0;
-                    /* Agar 50ms se zyada lage to device slow hai */
-                    if (elapsed > 50 || navigator.hardwareConcurrency <= 2 || (navigator.deviceMemory && navigator.deviceMemory <= 2)) {
-                        document.documentElement.classList.add('lite-mode');
-                    }
-                } catch(e) {}
-            })();
+            _loadLiteMode();
 
             /* Real-time feats listener so Google button updates when admin changes it */
             onValue(ref(db, 'appFeatures'), function(snap) {
                 if (snap.exists()) feats = snap.val();
             });
 
-            /* ── onAuthStateChanged — yeh Firebase ka main session listener hai ──
-               Firebase LOCAL persistence ke saath yeh automatically saved session
-               detect karta hai even after app restart/refresh. */
             onAuthStateChanged(auth, function(user) {
                 if (user) {
                     cu = user;
@@ -6177,7 +6207,6 @@
                         showScreen('loginScreen');
                     });
                 } else {
-                    /* User logged out ya session nahi mili */
                     cu = null;
                     uD = {};
                     $('mainWrap').style.display = 'none';
@@ -6186,10 +6215,18 @@
                     showL(false);
                     Promise.all([
                         get(ref(db, 'settings')).catch(function() {
-                            return { exists: function() { return false; } };
+                            return {
+                                exists: function() {
+                                    return false;
+                                }
+                            };
                         }),
                         get(ref(db, 'appFeatures')).catch(function() {
-                            return { exists: function() { return false; } };
+                            return {
+                                exists: function() {
+                                    return false;
+                                }
+                            };
                         })
                     ]).then(function(res) {
                         cfg = res[0].exists() ? res[0].val() : {};
@@ -6209,8 +6246,7 @@
             // Apply saved language on start
             var savedLang = localStorage.getItem('jst_lang') || 'en';
             applyLang(savedLang);
-            /* 50ms delay - DOM settle hone do, phir start */
-            setTimeout(_startApp, 50);
+            setTimeout(_startApp, 200);
             // Notification permission popup — app open hone pe 4 second baad
             setTimeout(function() {
                 if ('Notification' in window && Notification.permission === 'default') {
